@@ -1,0 +1,128 @@
+{
+  "url": "https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/538e267bd55920329c38ae49a6df248d3cc9e1eb/index.html",
+  "testedAt": "2026-09-11T15:29:19.249Z",
+  "runId": "34616311195",
+  "ok": true,
+  "passed": 28,
+  "checks": [
+    {
+      "name": "Page returns HTTP 200: rawcdn.githack.com",
+      "passed": true
+    },
+    {
+      "name": "Public preview defaults to unconfigured",
+      "passed": true
+    },
+    {
+      "name": "Shared CDN password field disabled",
+      "passed": true
+    },
+    {
+      "name": "Shared CDN connect button disabled",
+      "passed": true
+    },
+    {
+      "name": "All six review areas present",
+      "passed": true
+    },
+    {
+      "name": "No provider iframe started",
+      "passed": true
+    },
+    {
+      "name": "No generated city drawn",
+      "passed": true
+    },
+    {
+      "name": "Existing 32 place records retained",
+      "passed": true
+    },
+    {
+      "name": "Place search works",
+      "passed": true
+    },
+    {
+      "name": "Place popup works before SDK",
+      "passed": true
+    },
+    {
+      "name": "Naver official search link retained",
+      "passed": true
+    },
+    {
+      "name": "Programmatic submit cannot bypass shared-origin gate",
+      "passed": true
+    },
+    {
+      "name": "Forged window messages cannot mark provider ready",
+      "passed": true
+    },
+    {
+      "name": "Actual browser download keeps geometry flags unverified",
+      "passed": true
+    },
+    {
+      "name": "Diagnostic contains no credential",
+      "passed": true
+    },
+    {
+      "name": "Registration fields can be copied or selected",
+      "passed": true
+    },
+    {
+      "name": "Page returns HTTP 200: rawcdn.githack.com",
+      "passed": true
+    },
+    {
+      "name": "Mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Mobile shared-host key gate active",
+      "passed": true
+    },
+    {
+      "name": "Mobile place popup accessible",
+      "passed": true
+    },
+    {
+      "name": "Page returns HTTP 200: 127.0.0.1:38731",
+      "passed": true
+    },
+    {
+      "name": "Local dedicated-host form enabled",
+      "passed": true
+    },
+    {
+      "name": "Blank key rejected without SDK",
+      "passed": true
+    },
+    {
+      "name": "Malformed key rejected and cleared",
+      "passed": true
+    },
+    {
+      "name": "Actual native storage remains free of app credentials",
+      "passed": true
+    },
+    {
+      "name": "Local inspection still not geometry-ready",
+      "passed": true
+    },
+    {
+      "name": "No VWorld SDK or model request during no-key tests",
+      "passed": true
+    },
+    {
+      "name": "No JavaScript runtime errors",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "providerRequestCount": 0,
+  "failure": null,
+  "sdkLiveTested": false,
+  "jejuModelReceived": false,
+  "actualGeometryVerified": false,
+  "scope": "Live public HTTPS no-key preview plus local-host browser checks. No successful provider response is mocked or claimed. Not a physical-phone performance test."
+}

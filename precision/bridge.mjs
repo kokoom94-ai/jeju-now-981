@@ -75,7 +75,14 @@ function childRuntime(channel,origin,places) {
             const v=hit.getProperty(name);
             if(['string','number','boolean'].includes(typeof v))properties.push([String(name).slice(0,80),String(v).slice(0,300)]);
           }
-          send('model-picked',{properties});
+          let lon=null,lat=null;
+          try {
+            if(viewer.scene.pickPositionSupported){
+              const point=viewer.scene.pickPosition(m.position);
+              if(point){const cart=C.Cartographic.fromCartesian(point);lon=C.Math.toDegrees(cart.longitude);lat=C.Math.toDegrees(cart.latitude);}
+            }
+          } catch {}
+          send('model-picked',{providerType:'Cesium3DTileFeature',properties,lon,lat});
         } catch {send('selection-empty');}
       },C.ScreenSpaceEventType.LEFT_CLICK);
       for(const p of places) {
