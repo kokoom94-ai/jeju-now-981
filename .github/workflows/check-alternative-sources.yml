@@ -1,0 +1,51 @@
+name: Check alternative live sources
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/check-alternative-sources.yml'
+permissions: {}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Check public sources without credentials
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request, urllib.error, urllib.robotparser
+          from datetime import datetime, timezone
+          UA='JejuNow981/2.2 (+https://github.com/kokoom94-ai/jeju-now-981)'
+          def get(url):
+            try:
+              req=urllib.request.Request(url,headers={'User-Agent':UA,'Accept':'application/json,text/html,text/plain'})
+              with urllib.request.urlopen(req,timeout=15) as r:
+                body=r.read(2000000).decode('utf-8','replace')
+                return r.status,body,dict(r.headers)
+            except Exception as e:
+              return 0,'',{'error':str(e)[:240]}
+          now=datetime.now(timezone.utc)
+          print('CHECKED_AT',now.isoformat())
+          u='https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=33.3901&lon=126.3643'
+          code,body,headers=get(u)
+          print('MET_HTTP',code,headers.get('error',''))
+          if code==200:
+            p=json.loads(body)
+            ts=p.get('properties',{}).get('timeseries',[])
+            nearby=[x for x in ts if datetime.fromisoformat(x['time'].replace('Z','+00:00'))>=now][:4]
+            print('MET_RESULT',json.dumps({'geometry':p.get('geometry'),'meta':p.get('properties',{}).get('meta'),'timeseries':nearby,'expires':headers.get('Expires')},ensure_ascii=False))
+          for root,page in [('https://data.ijto.or.kr','/bigdata/sub01.do?contentsid=CNTS_200000000008633'),('https://www.visitjeju.net','/kr/detail/view?contentsid=CNTS_200000000008633')]:
+            code,body,headers=get(root+'/robots.txt')
+            print('ROBOTS',root,code,headers.get('error',''))
+            if code not in (200,404): continue
+            rp=urllib.robotparser.RobotFileParser();rp.parse(body.splitlines() if code==200 else [])
+            if not rp.can_fetch(UA,root+page):
+              print('PUBLIC_ACCESS_DISALLOWED',root);continue
+            code,body,headers=get(root+page)
+            print('PUBLIC_PAGE',root,code,headers.get('error',''),'BYTES',len(body))
+            if code==200:
+              import re
+              print('PUBLIC_REFERENCES',json.dumps(re.findall(r'''["']([^"']*(?:congest|crowd|population|realtime|bigdata)[^"']*)["']''',body,re.I)[:12],ensure_ascii=False)[:2200])
+          code,body,headers=get('https://jeju-now-981.onrender.com/health')
+          print('SERVICE',code,body[:1000] if code==200 else headers.get('error',''))
+          PY
