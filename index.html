@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JEJU NOW — 9.81 PARK</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#18232f;background:#f4f7fa}*{box-sizing:border-box}body{margin:0}.wrap{max-width:1440px;margin:0 auto;padding:22px}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.brand h1{margin:0;font-size:28px}.brand p{margin:6px 0;color:#667788}.badge{padding:9px 12px;border-radius:999px;background:#e8f7ee;color:#237349;font-weight:700}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}.card{background:white;border-radius:18px;padding:18px;box-shadow:0 6px 24px rgba(27,48,70,.07)}.metric small{color:#718096}.metric strong{display:block;font-size:30px;margin-top:4px}.main{display:grid;grid-template-columns:2fr 1fr;gap:14px}.scene{min-height:540px;position:relative;overflow:hidden;background:linear-gradient(180deg,#dff2ff,#f7fbfd 42%,#dfead7)}.mountain{position:absolute;inset:0 0 42% 0;background:linear-gradient(145deg,transparent 50%,#b7d4c3 51% 70%,transparent 71%);opacity:.75}.building{position:absolute;left:11%;top:28%;width:35%;height:33%;background:#c7d0d8;border:10px solid #e7edf1;transform:skewY(-6deg);box-shadow:0 20px 35px rgba(0,0,0,.12)}.roof{position:absolute;left:15%;top:21%;width:32%;height:13%;background:rgba(119,168,196,.35);border:2px solid rgba(69,109,132,.35);transform:skewY(-6deg)}.indoor{position:absolute;left:14%;top:39%;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:30%}.zone{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.9);font-size:12px;box-shadow:0 4px 12px rgba(0,0,0,.08)}.track{position:absolute;right:5%;top:19%;width:49%;height:54%;border:22px solid #757f87;border-radius:45% 55% 50% 40%;transform:rotate(-7deg);box-shadow:inset 0 0 0 5px #f3f5f7}.track:after{content:"";position:absolute;inset:18%;border:14px solid #7e888f;border-radius:50% 35% 45% 55%}.start{position:absolute;right:35%;bottom:15%;width:28%;height:70px;background:#4f575d;border-radius:10px;transform:rotate(-6deg)}.parking{position:absolute;left:4%;bottom:6%;width:28%;height:19%;background:repeating-linear-gradient(90deg,#d9dde0 0 14px,#fff 14px 17px)}.pin{position:absolute;padding:8px 10px;border-radius:999px;color:white;font-size:12px;font-weight:700}.p1{right:17%;top:17%;background:#d65a5a}.p2{right:29%;top:59%;background:#df9b33}.p3{left:18%;top:29%;background:#586fb7}.side h3{margin-top:0}.zones{display:grid;gap:9px}.zrow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #eef1f4}.zrow:last-child{border:0}.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:8px}.good{background:#2f9d62}.normal{background:#e4b545}.busy{background:#e27d39}.very-busy{background:#cc4b4b}.forecast{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:130px;margin-top:12px}.bar{background:#91b7d2;border-radius:8px 8px 0 0;min-height:16px}.ft{font-size:10px;text-align:center;color:#667}.note{margin-top:14px;padding:12px;border-radius:12px;background:#f0f6fb;color:#46606f;font-size:13px}.footer{margin-top:14px;font-size:12px;color:#7a8792}.livepulse{display:inline-block;width:9px;height:9px;border-radius:50%;background:#2ba565;margin-right:6px;animation:p 1.4s infinite}@keyframes p{50%{opacity:.35;transform:scale(.8)}}@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.main{grid-template-columns:1fr}.scene{min-height:430px}}@media(max-width:560px){.grid{grid-template-columns:1fr}.wrap{padding:14px}.brand h1{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><h1>JEJU NOW — 9.81 PARK</h1><p>실내·실외 3D 혼잡 디지털트윈 · SKT Fusion Ready</p></div>
+    <div class="badge"><span class="livepulse"></span><span id="source">ESTIMATED LIVE</span></div>
+  </div>
+
+  <div class="grid">
+    <div class="card metric"><small>현재 추정 체류인원</small><strong id="total">-</strong><span id="crowd">-</span></div>
+    <div class="card metric"><small>도민</small><strong id="locals">-</strong><span id="localPct">-</span></div>
+    <div class="card metric"><small>관광객</small><strong id="tourists">-</strong><span id="tourPct">-</span></div>
+    <div class="card metric"><small>추천 방문시간</small><strong style="font-size:24px">15:20–16:40</strong><span>혼잡 완화 예상 시간대</span></div>
+  </div>
+
+  <div class="main">
+    <div class="card scene">
+      <div class="mountain"></div><div class="roof"></div><div class="building"></div>
+      <div class="indoor">
+        <div class="zone">실내 로비 <b id="zlobby">-</b></div>
+        <div class="zone">SPORTS LAB <b id="zsport">-</b></div>
+        <div class="zone">RINGGGO <b id="zring">-</b></div>
+        <div class="zone">SPACE CUP <b id="zspace">-</b></div>
+      </div>
+      <div class="track"></div><div class="start"></div><div class="parking"></div>
+      <div class="pin p1">실외 레이스장</div><div class="pin p2">레이스 출발</div><div class="pin p3">실내동</div>
+    </div>
+
+    <div class="side">
+      <div class="card"><h3>구역별 실시간 현황</h3><div class="zones" id="zones"></div></div>
+      <div class="card" style="margin-top:14px"><h3>향후 3시간 혼잡 예측</h3><div class="forecast" id="forecast"></div><div class="note">실시간 추정값은 5초마다 갱신됩니다. SKT 또는 JTO 피드가 연결되면 해당 값을 기준(anchor)으로 재보정됩니다.</div></div>
+    </div>
+  </div>
+  <div class="footer">※ 현재 수치는 실시간 추정 모델 기반이며 실제 현장 인원과 차이가 있을 수 있습니다. 외부 실증 시에는 SKT 5분 유동인구와 9.81 실제 체류인원으로 별도 검증이 필요합니다.</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function pct(a,b){return b?Math.round(a/b*100):0}
+function apply(d){
+  $('total').textContent=d.people.total.toLocaleString()+'명'; $('crowd').textContent='혼잡도 '+d.crowd.label;
+  $('locals').textContent=d.people.locals.toLocaleString()+'명'; $('tourists').textContent=d.people.tourists.toLocaleString()+'명';
+  $('localPct').textContent=pct(d.people.locals,d.people.total)+'%'; $('tourPct').textContent=pct(d.people.tourists,d.people.total)+'%'; $('source').textContent=d.source;
+  const map=Object.fromEntries(d.zones.map(z=>[z.id,z]));
+  if(map['indoor-lobby']) $('zlobby').textContent=map['indoor-lobby'].count+'명'; if(map['sports-lab']) $('zsport').textContent=map['sports-lab'].count+'명'; if(map['ringggo']) $('zring').textContent=map['ringggo'].count+'명'; if(map['space-cup']) $('zspace').textContent=map['space-cup'].count+'명';
+  $('zones').innerHTML=d.zones.slice(0,9).map(z=>`<div class="zrow"><div><span class="dot ${z.status}"></span>${z.name}</div><div><b>${z.count}명</b><br><small>${z.label}${z.waitMinutes?` · 대기 ${z.waitMinutes}분`:''}</small></div></div>`).join('');
+}
+async function loadForecast(){try{const r=await fetch('/api/v1/parks/981/forecast');const d=await r.json();const max=Math.max(...d.points.map(x=>x.total));$('forecast').innerHTML=d.points.map((x,i)=>`<div><div class="bar" style="height:${Math.max(18,x.total/max*105)}px"></div><div class="ft">${i*30}m<br>${x.total}</div></div>`).join('')}catch{}}
+fetch('/api/v1/parks/981/live').then(r=>r.json()).then(apply).catch(()=>{}); loadForecast(); setInterval(loadForecast,60000);
+const es=new EventSource('/api/v1/parks/981/stream'); es.onmessage=e=>{try{apply(JSON.parse(e.data))}catch{}};
+</script>
+</body>
+</html>
