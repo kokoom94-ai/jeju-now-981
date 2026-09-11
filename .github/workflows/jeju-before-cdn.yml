@@ -1,0 +1,44 @@
+name: Publish JEJU BEFORE public CDN beta
+on:
+  push:
+    branches: [jeju-before-web]
+    paths:
+      - .github/workflows/jeju-before-cdn.yml
+      - deploy/cdn.mjs
+      - deploy/cdn-browser.cjs
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: jeju-before-cdn-publication
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Publish exact HTML on isolated branch and verify CDN bytes
+        run: node deploy/cdn.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Install browser test runner
+        run: npm install --prefix "$RUNNER_TEMP/jeju-browser-check" --no-package-lock playwright@1.55.0
+      - name: Test public CDN site on desktop and mobile
+        run: node deploy/cdn-browser.cjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PLAYWRIGHT_ROOT: ${{ runner.temp }}/jeju-browser-check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jeju-before-cdn-browser-results
+          path: |
+            public-qa/
+            cdn-target.json
+          if-no-files-found: ignore
