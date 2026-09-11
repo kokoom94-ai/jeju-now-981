@@ -1,0 +1,75 @@
+name: Publish JEJU BEFORE real-geometry visual upgrade
+on:
+  push:
+    branches: [jeju-before-web]
+    paths:
+      - realism/renderer.js
+      - realism/build.mjs
+      - realism/verify.cjs
+      - .github/workflows/jeju-before-real-publish.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: jeju-before-real-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build with mandatory real geometry and available photo materials
+        run: node realism/build.mjs
+      - name: Publish only the new real.html application and entry module
+        run: |
+          git config user.name 'JEJU BEFORE build'
+          git config user.email 'jeju-before-build@users.noreply.github.com'
+          git add real.html realism/entry.js
+          git diff --cached --quiet || git commit -m 'Build JEJU BEFORE real-geometry visual beta [skip ci]'
+          git pull --rebase origin jeju-before-web
+          git push origin HEAD:jeju-before-web
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          import {createHash} from 'node:crypto';
+          const commit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+          const url=`https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/${commit}/real.html`;
+          const local=await fs.readFile('real.html'),sha256=b=>createHash('sha256').update(b).digest('hex');
+          let verified=false,lastError='';
+          for(let i=0;i<6;i++){
+            try{const r=await fetch(url,{signal:AbortSignal.timeout(45000)});const remote=Buffer.from(await r.arrayBuffer());if(!r.ok||sha256(remote)!==sha256(local))throw Error('HTTP status or content hash mismatch');verified=true;break;}catch(e){lastError=e.message;await new Promise(r=>setTimeout(r,6000));}
+          }
+          const report={version:'2.0.0-realism-beta',url,commit,publishedAt:new Date().toISOString(),httpVerified:verified,htmlSha256:sha256(local),htmlBytes:local.length,mapMode:'osm',streetViewPhotography:false,satelliteImagery:false,facadesSurveyed:false,mainBranchModified:false,host:'GitHub + rawcdn.githack.com',runId:process.env.GITHUB_RUN_ID,...(!verified?{lastError}:{})};
+          await fs.writeFile('realism/publication.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
+          if(!verified)throw Error('Public HTML verification failed: '+lastError);
+          NODE
+      - name: Install Chromium test runner
+        run: |
+          mkdir -p /tmp/jeju-real-qa
+          npm install --prefix /tmp/jeju-real-qa playwright@1.56.1
+          /tmp/jeju-real-qa/node_modules/.bin/playwright install --with-deps chromium
+      - name: Verify real public URL in desktop and mobile browser layouts
+        env:
+          PLAYWRIGHT_ROOT: /tmp/jeju-real-qa
+        run: xvfb-run -a node realism/verify.cjs
+      - name: Record publication and verification without changing main
+        if: always()
+        run: |
+          git config user.name 'JEJU BEFORE build'
+          git config user.email 'jeju-before-build@users.noreply.github.com'
+          test ! -f realism/publication.json || git add realism/publication.json
+          test ! -f realism/browser-result.json || git add realism/browser-result.json
+          git diff --cached --quiet || git commit -m 'Record JEJU BEFORE v2 publication and browser verification [skip ci]'
+          git pull --rebase origin jeju-before-web
+          git push origin HEAD:jeju-before-web
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jeju-before-real-visual-qa
+          path: realism-qa/
+          retention-days: 14
+          if-no-files-found: ignore
