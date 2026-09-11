@@ -1,0 +1,85 @@
+{
+  "version": "2.0.0-realism-beta",
+  "acquiredAt": "2026-09-11T12:24:39.156Z",
+  "textures": [
+    {
+      "alias": "road",
+      "channel": "color",
+      "file": "road-color.jpg",
+      "id": "asphalt_01",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_01/asphalt_01_diff_1k.jpg",
+      "sourcePage": "https://polyhaven.com/a/asphalt_01",
+      "license": "CC0-1.0",
+      "bytes": 739513
+    },
+    {
+      "alias": "road",
+      "channel": "normal",
+      "file": "road-normal.jpg",
+      "id": "asphalt_01",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_01/asphalt_01_nor_gl_1k.jpg",
+      "sourcePage": "https://polyhaven.com/a/asphalt_01",
+      "license": "CC0-1.0",
+      "bytes": 1237059
+    },
+    {
+      "alias": "wall",
+      "channel": "color",
+      "file": "wall-color.jpg",
+      "id": "concrete_wall_006",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_wall_006/concrete_wall_006_diff_1k.jpg",
+      "sourcePage": "https://polyhaven.com/a/concrete_wall_006",
+      "license": "CC0-1.0",
+      "bytes": 769415
+    },
+    {
+      "alias": "wall",
+      "channel": "normal",
+      "file": "wall-normal.jpg",
+      "id": "concrete_wall_006",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/concrete_wall_006/concrete_wall_006_nor_gl_1k.jpg",
+      "sourcePage": "https://polyhaven.com/a/concrete_wall_006",
+      "license": "CC0-1.0",
+      "bytes": 1195078
+    },
+    {
+      "alias": "paving",
+      "channel": "color",
+      "file": "paving-color.jpg",
+      "id": "pavement_02",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/pavement_02/pavement_02_diff_1k.jpg",
+      "sourcePage": "https://polyhaven.com/a/pavement_02",
+      "license": "CC0-1.0",
+      "bytes": 1178347
+    },
+    {
+      "alias": "paving",
+      "channel": "normal",
+      "file": "paving-normal.jpg",
+      "id": "pavement_02",
+      "source": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/pavement_02/pavement_02_nor_gl_1k.jpg",
+      "sourcePage": "https://polyhaven.com/a/pavement_02",
+      "license": "CC0-1.0",
+      "bytes": 738746
+    }
+  ],
+  "failures": [],
+  "geometry": {
+    "roads": 7562,
+    "buildings": 10617,
+    "coastSource": "OSM",
+    "coastPoints": 1349,
+    "points": 1763,
+    "walkable": 6940,
+    "heightExplicit": 10,
+    "heightFromLevels": 663,
+    "heightAssumed": 9944,
+    "bounds": [
+      126.462,
+      33.468,
+      126.575,
+      33.536
+    ]
+  },
+  "materialsComplete": true
+}

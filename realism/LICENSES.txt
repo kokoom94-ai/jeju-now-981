@@ -1,0 +1,5 @@
+Geometry: © OpenStreetMap contributors, ODbL 1.0. Derived database: world-v2.json. https://www.openstreetmap.org/copyright
+Photo materials when present: Poly Haven, CC0 1.0. acquisition.json records successful files and failures. https://polyhaven.com/license
+Surface scans are generic, NOT photographs of Jeju streets.
+Three.js r180: MIT; vendor/THREE-LICENSE.txt.
+No Naver/Google/Esri satellite or street-view imagery is copied or bundled.
