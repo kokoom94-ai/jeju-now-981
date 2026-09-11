@@ -9,6 +9,12 @@
 3. 피드 오류, 지연, 잘못된 응답 또는 자격증명 미설정 시 서비스는 중단하지 않고 `ESTIMATED LIVE`로 자동 fallback 합니다.
 4. 외부 중계 시스템이 push 방식만 지원하면 인증된 `POST /api/v1/ingest/skt`를 사용할 수 있습니다.
 
+### JTO 공개 화면 차트 어댑터
+
+`mondak`에서 사용한 패턴처럼 JTO 빅데이터 플랫폼의 웹 화면이 요청하는 chart endpoint를 **운영자가 지정한 차트 하나에 한해** 읽을 수 있습니다. 이 어댑터는 공개 화면에서 정상 응답하는 데이터에만 사용하며, 데이터셋 번호를 탐색하지 않고 로그인·세션·인증을 우회하지 않습니다.
+
+이 경로는 문서화된 API 계약이 아니며, 제공기관의 이용약관·robots 정책·운영 허가가 우선입니다. 또한 일반 공개 차트 값은 집계 지표일 수 있으므로 화면에는 `JTO PUBLIC CHART · DERIVED`로 표시되며, `SKT/JTO REALTIME` 또는 실제 파크 인원으로 표시되지 않습니다.
+
 서버는 재시도 시 지수 backoff, 12초 요청 timeout, 최대 관측 연령 검사(기본 15분), 제한된 request body, 인증 없는 ingest 차단을 적용합니다. `/health`와 `/api/v1/parks/981/skt/status`에서 비밀값 없이 연결 상태를 확인할 수 있습니다.
 
 ## Render 환경변수
@@ -33,6 +39,16 @@
 | `JTO_SKT_LOCALS_PATH` | `data.people.locals` | 도민 필드 경로 |
 | `JTO_SKT_TOURISTS_PATH` | `data.people.tourists` | 관광객 필드 경로 |
 | `JTO_SKT_OBSERVED_AT_PATH` | `data.observedAt` | 관측시각 필드 경로 |
+
+공개 차트 어댑터는 실제로 승인받은 차트의 응답 구조를 확인한 뒤에만 아래 값을 설정합니다.
+
+| 변수 | 용도 |
+|---|---|
+| `JTO_PUBLIC_CHART_REG_SN` | 승인된 숫자형 데이터셋 ID 하나 |
+| `JTO_PUBLIC_CHART_INDEX` | 차트 index, 기본값 `0` |
+| `JTO_PUBLIC_CHART_VALUE_PATH` | 응답 JSON의 수치 필드 경로 |
+| `JTO_PUBLIC_CHART_LOCALS_PATH` / `JTO_PUBLIC_CHART_TOURISTS_PATH` | 필요 시 도민·관광객 필드 경로 |
+| `JTO_PUBLIC_CHART_OBSERVED_AT_PATH` | 필요 시 관측시각 필드 경로 |
 
 기본적으로 인식하는 필드는 `people.total`, `data.people.total`, `total`, `data.total`, `visitorCount`, `population` 등입니다. 실제 JTO 응답 구조가 다르면 위의 `*_PATH`만 설정하면 됩니다. `DATA_MODE=estimated`로 설정하면 외부 poll을 명시적으로 끕니다.
 

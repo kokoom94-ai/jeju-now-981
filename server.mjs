@@ -18,6 +18,15 @@ const TOTAL_PATH = process.env.JTO_SKT_TOTAL_PATH || '';
 const LOCALS_PATH = process.env.JTO_SKT_LOCALS_PATH || '';
 const TOURISTS_PATH = process.env.JTO_SKT_TOURISTS_PATH || '';
 const OBSERVED_AT_PATH = process.env.JTO_SKT_OBSERVED_AT_PATH || '';
+// Opt-in adapter for a single, operator-approved public chart used by the JTO web UI.
+// It deliberately does not discover datasets or bypass login/session controls.
+const JTO_PUBLIC_CHART_REG_SN = process.env.JTO_PUBLIC_CHART_REG_SN || '';
+const JTO_PUBLIC_CHART_INDEX = Number(process.env.JTO_PUBLIC_CHART_INDEX || 0);
+const JTO_PUBLIC_CHART_VALUE_PATH = process.env.JTO_PUBLIC_CHART_VALUE_PATH || '';
+const JTO_PUBLIC_CHART_LOCALS_PATH = process.env.JTO_PUBLIC_CHART_LOCALS_PATH || '';
+const JTO_PUBLIC_CHART_TOURISTS_PATH = process.env.JTO_PUBLIC_CHART_TOURISTS_PATH || '';
+const JTO_PUBLIC_CHART_OBSERVED_AT_PATH = process.env.JTO_PUBLIC_CHART_OBSERVED_AT_PATH || '';
+const JTO_PUBLIC_CHART_URL = 'https://data.ijto.or.kr/api/dataPick/chart/renderChart.do';
 
 const zones = [
   ['indoor-lobby', '실내 로비', 72, 140, 'indoor'],
@@ -40,7 +49,7 @@ let history = [];
 let last = null;
 let pollInFlight = false;
 const provider = {
-  configured: false, state: 'disabled', lastAttemptAt: null, lastSuccessAt: null,
+  configured: false, adapter: 'none', state: 'disabled', lastAttemptAt: null, lastSuccessAt: null,
   lastError: null, consecutiveFailures: 0
 };
 
@@ -120,7 +129,7 @@ function generate() {
   const locals = Math.round(total * localsRatio);
   const totalCapacity = zones.reduce((sum, zone) => sum + zone.capacity, 0);
   const [label, status] = crowdLabel(total / totalCapacity);
-  const mode = anchor ? 'skt-realtime' : 'estimated';
+  const mode = anchor ? (anchor.source === 'JTO_PUBLIC_CHART_DERIVED' ? 'jto-derived' : 'skt-realtime') : 'estimated';
   last = {
     parkId: '981', observedAt: now.toISOString(), source: anchor?.source || 'ESTIMATED LIVE', mode,
     people: { total, locals, tourists: total - locals },
@@ -154,19 +163,19 @@ function toCount(value) {
   return Number.isFinite(number) && number >= 0 ? Math.round(number) : null;
 }
 
-function normalizeFeed(payload) {
-  const total = toCount(firstValue(payload, TOTAL_PATH, [
+function normalizeFeed(payload, options = {}) {
+  const total = toCount(firstValue(payload, options.totalPath ?? TOTAL_PATH, options.totalCandidates ?? [
     'people.total', 'data.people.total', 'total', 'data.total', 'visitorCount', 'data.visitorCount', 'population', 'data.population'
   ]));
-  if (total === null) throw new Error('upstream response does not contain a valid total; set JTO_SKT_TOTAL_PATH');
-  const locals = toCount(firstValue(payload, LOCALS_PATH, ['people.locals', 'data.people.locals', 'locals', 'data.locals', 'residentCount']));
-  const tourists = toCount(firstValue(payload, TOURISTS_PATH, ['people.tourists', 'data.people.tourists', 'tourists', 'data.tourists', 'touristCount']));
-  const rawObservedAt = firstValue(payload, OBSERVED_AT_PATH, ['observedAt', 'data.observedAt', 'timestamp', 'data.timestamp', 'updatedAt', 'data.updatedAt']);
+  if (total === null) throw new Error(options.errorHint || 'upstream response does not contain a valid total; set JTO_SKT_TOTAL_PATH');
+  const locals = toCount(firstValue(payload, options.localsPath ?? LOCALS_PATH, options.localsCandidates ?? ['people.locals', 'data.people.locals', 'locals', 'data.locals', 'residentCount']));
+  const tourists = toCount(firstValue(payload, options.touristsPath ?? TOURISTS_PATH, options.touristsCandidates ?? ['people.tourists', 'data.people.tourists', 'tourists', 'data.tourists', 'touristCount']));
+  const rawObservedAt = firstValue(payload, options.observedAtPath ?? OBSERVED_AT_PATH, options.observedAtCandidates ?? ['observedAt', 'data.observedAt', 'timestamp', 'data.timestamp', 'updatedAt', 'data.updatedAt']);
   const observedAt = rawObservedAt ? new Date(rawObservedAt) : new Date();
   if (Number.isNaN(observedAt.getTime())) throw new Error('upstream observedAt is invalid');
   const age = Date.now() - observedAt.getTime();
   if (age > MAX_AGE_MS || age < -5 * 60_000) throw new Error('upstream observation is stale or has an invalid timestamp');
-  return { source: 'JTO_SKT_REALTIME', observedAt: observedAt.toISOString(), total, locals, tourists };
+  return { source: options.source || 'JTO_SKT_REALTIME', observedAt: observedAt.toISOString(), total, locals, tourists };
 }
 
 function setAnchor(anchor) {
@@ -180,7 +189,7 @@ function setAnchor(anchor) {
 
 function publicProviderStatus() {
   return {
-    configured: provider.configured, state: provider.state, lastAttemptAt: provider.lastAttemptAt,
+    configured: provider.configured, adapter: provider.adapter, state: provider.state, lastAttemptAt: provider.lastAttemptAt,
     lastSuccessAt: provider.lastSuccessAt, lastError: provider.lastError,
     consecutiveFailures: provider.consecutiveFailures, pollEverySeconds: Math.round(POLL_MS / 1000),
     maxAgeSeconds: Math.round(MAX_AGE_MS / 1000), activeAnchor: isFresh(),
@@ -194,13 +203,37 @@ async function pollJto() {
   provider.lastAttemptAt = new Date().toISOString();
   try {
     const headers = { accept: 'application/json' };
-    if (JTO_TOKEN) headers[JTO_AUTH_HEADER] = JTO_AUTH_SCHEME ? `${JTO_AUTH_SCHEME} ${JTO_TOKEN}` : JTO_TOKEN;
+    let requestUrl = JTO_URL;
+    let requestOptions = { headers };
+    if (provider.adapter === 'public-chart') {
+      requestUrl = JTO_PUBLIC_CHART_URL;
+      requestOptions = {
+        method: 'POST',
+        headers: {
+          ...headers, 'content-type': 'application/json; charset=UTF-8',
+          'x-requested-with': 'XMLHttpRequest', referer: 'https://data.ijto.or.kr/'
+        },
+        body: JSON.stringify({ regSn: JTO_PUBLIC_CHART_REG_SN, chartIndex: JTO_PUBLIC_CHART_INDEX, searchDataBgnDt: '', searchDataEndDt: '' })
+      };
+    } else if (JTO_TOKEN) {
+      headers[JTO_AUTH_HEADER] = JTO_AUTH_SCHEME ? `${JTO_AUTH_SCHEME} ${JTO_TOKEN}` : JTO_TOKEN;
+    }
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 12_000);
-    const response = await fetch(JTO_URL, { headers, signal: controller.signal });
+    const response = await fetch(requestUrl, { ...requestOptions, signal: controller.signal });
     clearTimeout(timer);
     if (!response.ok) throw new Error(`upstream responded ${response.status}`);
-    setAnchor(normalizeFeed(await response.json()));
+    const payload = await response.json();
+    const anchor = provider.adapter === 'public-chart'
+      ? normalizeFeed(payload, {
+          totalPath: JTO_PUBLIC_CHART_VALUE_PATH, localsPath: JTO_PUBLIC_CHART_LOCALS_PATH,
+          touristsPath: JTO_PUBLIC_CHART_TOURISTS_PATH, observedAtPath: JTO_PUBLIC_CHART_OBSERVED_AT_PATH,
+          totalCandidates: [], localsCandidates: [], touristsCandidates: [], observedAtCandidates: [],
+          source: 'JTO_PUBLIC_CHART_DERIVED',
+          errorHint: 'approved JTO chart value is missing; set JTO_PUBLIC_CHART_VALUE_PATH'
+        })
+      : normalizeFeed(payload);
+    setAnchor(anchor);
   } catch (error) {
     provider.consecutiveFailures += 1;
     provider.lastError = String(error.message || error).slice(0, 180);
@@ -215,11 +248,24 @@ async function pollJto() {
 
 function configureProvider() {
   if (DATA_MODE === 'estimated') return;
+  if (JTO_PUBLIC_CHART_REG_SN || JTO_PUBLIC_CHART_VALUE_PATH) {
+    if (!/^\d{1,8}$/.test(JTO_PUBLIC_CHART_REG_SN) || !JTO_PUBLIC_CHART_VALUE_PATH) {
+      provider.state = 'invalid-config';
+      provider.lastError = 'public-chart adapter requires one approved numeric JTO_PUBLIC_CHART_REG_SN and JTO_PUBLIC_CHART_VALUE_PATH';
+      return;
+    }
+    provider.configured = true;
+    provider.adapter = 'public-chart';
+    provider.state = 'connecting';
+    pollJto();
+    return;
+  }
   if (!JTO_URL) { provider.state = 'not-configured'; return; }
   try {
     const url = new URL(JTO_URL);
     if (url.protocol !== 'https:' && !ALLOW_INSECURE_UPSTREAM) throw new Error('JTO_SKT_API_URL must use HTTPS');
     provider.configured = true;
+    provider.adapter = 'approved-feed';
     provider.state = 'connecting';
     pollJto();
   } catch (error) {
@@ -254,7 +300,7 @@ function broadcast() {
   }
 }
 
-const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml' };
+const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp' };
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   if (url.pathname === '/health') return sendJson(res, 200, { ok: true, mode: last?.mode, source: last?.source, provider: publicProviderStatus() });
