@@ -1,0 +1,18 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';
+import {validateKey,sdkURL,initialState,transition,frameHTML,parsePlaces,cleanPlace} from './bridge.mjs';
+const testKey='TEST-ONLY-NOT-A-REAL-KEY-00000';
+test('blank keys rejected',()=>assert.throws(()=>validateKey('')));
+test('HTML key injection rejected',()=>assert.throws(()=>validateKey('\"/><script>alert(1)</script>')));
+test('official HTTPS SDK only',()=>{const u=new URL(sdkURL(testKey));assert.equal(u.origin,'https://map.vworld.kr');assert.equal(u.searchParams.get('version'),'3.0');});
+test('no provider configured at startup',()=>{const s=initialState();assert.equal(s.sdkReady,false);assert.equal(s.productionReady,false);assert.equal(s.generatedBuildingFallback,false);});
+test('SDK ready is not complete coverage',()=>{const s=transition(initialState(),'sdk-ready');assert.equal(s.sdkReady,true);assert.equal(s.coverageVerified,false);assert.equal(s.productionReady,false);});
+test('one model is not full height or roof validation',()=>{const s=transition(transition(initialState(),'sdk-ready'),'model-picked');assert.equal(s.modelSelections,1);assert.equal(s.heightsVerified,false);assert.equal(s.roofShapesVerified,false);assert.equal(s.productionReady,false);});
+test('no model can be accepted before SDK ready',()=>assert.equal(transition(initialState(),'model-picked').modelObserved,false));
+test('disconnect clears observations',()=>assert.deepEqual(transition(transition(initialState(),'sdk-ready'),'disconnect'),initialState()));
+test('failed SDK never marks success',()=>{const s=transition(initialState(),'error');assert.equal(s.state,'error');assert.equal(s.sdkReady,false);});
+test('no untrusted HTTP origin in hosted use',()=>assert.throws(()=>frameHTML({key:testKey,channel:'test-session-123',origin:'http://untrusted.example'})));
+test('bad frame session rejected',()=>assert.throws(()=>frameHTML({key:testKey,channel:'</script>',origin:'https://example.com'})));
+test('place strings cannot escape inline script',()=>{const h=frameHTML({key:testKey,channel:'test-session-123',origin:'https://example.com',places:[{id:'t',name:'</script><script>bad()</script>',lon:126.52,lat:33.51}]});assert(!h.includes('<script>bad()'));const scripts=[...h.matchAll(/<script>([\s\S]*?)<\/script>/g)];assert.equal(scripts.length,1);new vm.Script(scripts[0][1]);});
+test('out-of-scope places rejected',()=>assert.equal(cleanPlace({id:'x',name:'x',lon:127,lat:37}),null));
+test('existing app place seed retained without execution',()=>{const p=parsePlaces(fs.readFileSync(new URL('../index.html',import.meta.url),'utf8'));assert.equal(p.length,32);assert(p.every(x=>x.naverVerified===false));});
+test('bridge has no key persistence, manual heights or synthetic building geometry',()=>{const s=fs.readFileSync(new URL('./bridge.mjs',import.meta.url),'utf8');assert(!/localStorage|sessionStorage|BoxGeometry|extrudedHeight|height\s*:\s*9\b/.test(s));});
