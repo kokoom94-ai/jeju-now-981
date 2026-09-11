@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "kind": "public-cdn-beta",
+  "url": "https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/7e6e839b847fcf98d1069a89ae2ec70ccdbc9417/index.html",
+  "sourceUrl": "https://github.com/kokoom94-ai/jeju-now-981/blob/jeju-before-web/index.html",
+  "commit": "7e6e839b847fcf98d1069a89ae2ec70ccdbc9417",
+  "htmlSha256": "b295bbb513b950f38a1ec38dcbcae4828d24fabd1962f524bcf7327d452f9629",
+  "bytes": 148070,
+  "places": 32,
+  "mapMode": "schematic",
+  "naverVerified": 0,
+  "netlifyDeployed": false,
+  "netlifyFailure": "Account credit usage exceeded",
+  "publishedAt": "2026-09-11T11:09:44.974Z",
+  "runId": "34592660518",
+  "httpCheck": {
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "sha256": "b295bbb513b950f38a1ec38dcbcae4828d24fabd1962f524bcf7327d452f9629"
+  },
+  "httpVerified": true
+}
