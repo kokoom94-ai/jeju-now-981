@@ -1,61 +1,86 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>JEJU NOW — 9.81 PARK</title>
-<style>
-:root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#18232f;background:#f4f7fa}*{box-sizing:border-box}body{margin:0}.wrap{max-width:1440px;margin:0 auto;padding:22px}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.brand h1{margin:0;font-size:28px}.brand p{margin:6px 0;color:#667788}.badge{padding:9px 12px;border-radius:999px;background:#e8f7ee;color:#237349;font-weight:700}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}.card{background:white;border-radius:18px;padding:18px;box-shadow:0 6px 24px rgba(27,48,70,.07)}.metric small{color:#718096}.metric strong{display:block;font-size:30px;margin-top:4px}.main{display:grid;grid-template-columns:2fr 1fr;gap:14px}.scene{min-height:540px;position:relative;overflow:hidden;background:linear-gradient(180deg,#dff2ff,#f7fbfd 42%,#dfead7)}.mountain{position:absolute;inset:0 0 42% 0;background:linear-gradient(145deg,transparent 50%,#b7d4c3 51% 70%,transparent 71%);opacity:.75}.building{position:absolute;left:11%;top:28%;width:35%;height:33%;background:#c7d0d8;border:10px solid #e7edf1;transform:skewY(-6deg);box-shadow:0 20px 35px rgba(0,0,0,.12)}.roof{position:absolute;left:15%;top:21%;width:32%;height:13%;background:rgba(119,168,196,.35);border:2px solid rgba(69,109,132,.35);transform:skewY(-6deg)}.indoor{position:absolute;left:14%;top:39%;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:30%}.zone{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.9);font-size:12px;box-shadow:0 4px 12px rgba(0,0,0,.08)}.track{position:absolute;right:5%;top:19%;width:49%;height:54%;border:22px solid #757f87;border-radius:45% 55% 50% 40%;transform:rotate(-7deg);box-shadow:inset 0 0 0 5px #f3f5f7}.track:after{content:"";position:absolute;inset:18%;border:14px solid #7e888f;border-radius:50% 35% 45% 55%}.start{position:absolute;right:35%;bottom:15%;width:28%;height:70px;background:#4f575d;border-radius:10px;transform:rotate(-6deg)}.parking{position:absolute;left:4%;bottom:6%;width:28%;height:19%;background:repeating-linear-gradient(90deg,#d9dde0 0 14px,#fff 14px 17px)}.pin{position:absolute;padding:8px 10px;border-radius:999px;color:white;font-size:12px;font-weight:700}.p1{right:17%;top:17%;background:#d65a5a}.p2{right:29%;top:59%;background:#df9b33}.p3{left:18%;top:29%;background:#586fb7}.side h3{margin-top:0}.zones{display:grid;gap:9px}.zrow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #eef1f4}.zrow:last-child{border:0}.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:8px}.good{background:#2f9d62}.normal{background:#e4b545}.busy{background:#e27d39}.very-busy{background:#cc4b4b}.forecast{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:130px;margin-top:12px}.bar{background:#91b7d2;border-radius:8px 8px 0 0;min-height:16px}.ft{font-size:10px;text-align:center;color:#667}.note{margin-top:14px;padding:12px;border-radius:12px;background:#f0f6fb;color:#46606f;font-size:13px}.footer{margin-top:14px;font-size:12px;color:#7a8792}.livepulse{display:inline-block;width:9px;height:9px;border-radius:50%;background:#2ba565;margin-right:6px;animation:p 1.4s infinite}@keyframes p{50%{opacity:.35;transform:scale(.8)}}@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.main{grid-template-columns:1fr}.scene{min-height:430px}}@media(max-width:560px){.grid{grid-template-columns:1fr}.wrap{padding:14px}.brand h1{font-size:23px}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#071b2c">
+  <title>JEJU NOW — 9.81 PARK</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
+    :root{--ink:#eaf4fa;--muted:#97adba;--line:rgba(183,218,234,.17);--panel:rgba(7,30,48,.73);--deep:#061724;--cyan:#66e3ef;--green:#67d39c;--amber:#f8c86c;--orange:#f48b57;--red:#ee5d6c;font-family:Manrope,"Noto Sans KR",sans-serif;color:var(--ink);background:var(--deep)}
+    *{box-sizing:border-box} body{margin:0;min-width:320px;background:radial-gradient(circle at 73% 1%,#164a67 0,#071c2d 35%,#061520 72%);min-height:100vh} body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.24;background-image:linear-gradient(rgba(113,207,223,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(113,207,223,.08) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(#000,transparent 78%)}
+    .shell{max-width:1680px;margin:auto;padding:22px 28px 30px}.eyebrow,.kicker{font:500 10px/1 "DM Mono",monospace;letter-spacing:.15em;color:var(--cyan);text-transform:uppercase}.header{display:flex;justify-content:space-between;gap:24px;align-items:center;padding:0 0 21px;border-bottom:1px solid var(--line)}.title{display:flex;align-items:center;gap:14px}.mark{width:35px;height:35px;border-radius:11px;background:conic-gradient(from 170deg,#63dfe9,#356ded,#64d49b,#63dfe9);box-shadow:0 0 23px rgba(90,221,239,.28);position:relative}.mark:after{content:"981";position:absolute;inset:1px;border-radius:10px;background:#0a2638;display:grid;place-items:center;color:#d6fbff;font:700 10px "DM Mono",monospace}.title h1{font-size:18px;letter-spacing:-.035em;margin:3px 0 0}.header-right{display:flex;gap:19px;align-items:center}.updated{font-size:11px;color:var(--muted);text-align:right}.badge{border:1px solid rgba(103,211,156,.35);background:rgba(48,136,100,.14);color:#b8f2d1;border-radius:999px;padding:9px 12px;font:500 10px "DM Mono",monospace;letter-spacing:.07em}.pulse{display:inline-block;width:7px;height:7px;border-radius:10px;background:#73e7a6;margin-right:7px;box-shadow:0 0 0 0 rgba(115,231,166,.55);animation:pulse 1.7s infinite}@keyframes pulse{70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+    .metrics{display:grid;grid-template-columns:1.2fr repeat(3,1fr);gap:12px;margin:18px 0}.metric{background:linear-gradient(128deg,rgba(18,54,74,.84),rgba(8,30,46,.75));border:1px solid var(--line);border-radius:15px;padding:17px 19px;min-height:104px;position:relative;overflow:hidden}.metric:after{content:"";position:absolute;width:100px;height:100px;border-radius:50%;right:-28px;bottom:-56px;background:radial-gradient(circle,rgba(89,211,225,.15),transparent 65%)}.metric .value{font-size:30px;font-weight:800;letter-spacing:-.06em;line-height:1.25;margin-top:10px}.metric .value.time{font-size:21px;letter-spacing:-.035em}.metric small{font-size:11px;color:var(--muted)}.metric .sub{font:500 10px "DM Mono",monospace;color:#b4d1dc;margin-top:5px}.total-card{background:linear-gradient(125deg,rgba(22,82,102,.86),rgba(9,36,53,.86))}.total-card .value{color:#eafcff}.status-word{color:var(--cyan)}
+    .layout{display:grid;grid-template-columns:minmax(0,1.82fr) minmax(320px,.78fr);gap:14px}.panel{border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(16px);border-radius:17px;overflow:hidden}.panel-head{display:flex;align-items:flex-start;justify-content:space-between;padding:17px 19px 8px}.panel h2{font-size:14px;letter-spacing:-.03em;margin:5px 0 0}.legend{display:flex;gap:11px;flex-wrap:wrap;justify-content:flex-end;color:#a9c3ce;font:10px "DM Mono",monospace}.legend i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px}.scene{min-height:640px;position:relative;overflow:hidden;background:linear-gradient(154deg,#1c5068 0,#0e354c 24%,#133e50 24.5%,#0e2a3b 64%,#082131 100%);isolation:isolate}.scene:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 80% 80%,rgba(89,193,139,.25),transparent 35%),linear-gradient(35deg,transparent 49.5%,rgba(139,219,219,.06) 50%,transparent 50.6%);background-size:auto,28px 28px;opacity:.95}.scene:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,22,34,.7),transparent 20%,transparent 82%,rgba(4,22,34,.38));pointer-events:none}
+    .scene-label{position:absolute;z-index:8;color:#d4f5f5;font:500 10px "DM Mono",monospace;letter-spacing:.1em;text-shadow:0 1px 5px #001}.scene-label b{display:block;font:800 14px Manrope,sans-serif;letter-spacing:-.04em;margin-top:5px}.scene-label.indoor-label{left:7%;top:19%}.scene-label.race-label{right:13%;top:12%;text-align:right}.scene-label.race-label b{color:#cdf5cc}.north{position:absolute;right:24px;bottom:18px;text-align:center;z-index:9;font:500 10px "DM Mono",monospace;color:#a8d0df}.north:before{content:"▲";font-size:21px;color:var(--cyan);display:block;margin-bottom:4px}
+    .building{position:absolute;z-index:3;left:5%;top:29%;width:43%;height:39%;filter:drop-shadow(0 25px 20px rgba(0,9,18,.46));transform:perspective(800px) rotateX(55deg) rotateZ(-18deg)}.building .roof{position:absolute;inset:0;background:linear-gradient(145deg,#3a7891,#1e546c 44%,#14455e);clip-path:polygon(10% 0,91% 10%,100% 80%,20% 100%,0 55%);opacity:.65}.building .wall{position:absolute;left:14%;top:13%;width:73%;height:73%;clip-path:polygon(0 0,100% 7%,100% 85%,11% 100%,0 82%);background:linear-gradient(110deg,#0e293c,#234e62);border:1px solid rgba(161,230,233,.27);box-shadow:inset 0 0 35px rgba(74,207,218,.12)}.cutaway{position:absolute;left:19%;top:22%;width:59%;height:57%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:5px;transform:skewY(-2deg)}.cutaway:before{content:"INDOOR CUTAWAY";position:absolute;top:-21px;left:0;color:#a7d6e4;font:9px "DM Mono",monospace;letter-spacing:.14em}.room{position:relative;min-height:74px;border:1px solid rgba(226,250,255,.26);background:linear-gradient(135deg,rgba(37,90,109,.9),rgba(13,48,65,.95));box-shadow:inset 0 0 18px var(--heat-glow,rgba(80,204,196,.09));transition:.55s}.room:before{content:"";position:absolute;inset:4px;border:1px solid rgba(211,248,254,.12)}.room .room-name{position:absolute;left:7px;top:7px;font-size:9px;font-weight:700;z-index:1}.room .room-count{position:absolute;right:7px;bottom:6px;font:600 11px "DM Mono",monospace;color:#e9fdff}.room[data-zone="indoor-lobby"]{grid-row:span 2}.room[data-zone="sports-lab"]{grid-column:span 2}.room[data-zone="ticket"]{grid-column:span 2}
+    .track-wrap{position:absolute;z-index:2;right:-2%;top:20%;width:62%;height:68%;transform:rotate(-15deg) skewX(-7deg);filter:drop-shadow(0 20px 14px rgba(0,10,10,.38))}.track{position:absolute;inset:9% 6% 8% 8%;border-radius:48% 38% 44% 52%;border:38px solid #48656a;background:linear-gradient(125deg,#356e66,#235a56);box-shadow:inset 0 0 0 3px rgba(201,251,226,.42),0 0 0 9px rgba(87,202,148,.12)}.track:before{content:"";position:absolute;inset:13%;border-radius:47% 39% 50% 45%;border:28px solid #3f6063;box-shadow:inset 0 0 0 2px rgba(201,251,226,.35)}.track:after{content:"";position:absolute;inset:29%;border-radius:47% 50% 42% 48%;border:17px solid #45666a}.grass{position:absolute;inset:29%;border-radius:49%;background:radial-gradient(ellipse at 40% 40%,#699a70,#347067 66%,#285b59);box-shadow:inset 0 0 40px rgba(2,31,33,.6)}.lane{position:absolute;z-index:1;inset:10% 7% 9% 9%;border-radius:48% 38% 44% 52%;border:1px dashed rgba(239,255,224,.72);transform:scale(.76)}.race-straight{position:absolute;z-index:4;right:31%;top:55%;width:54%;height:42px;border-radius:10px;background:linear-gradient(#547275,#395d61);transform:rotate(-24deg);border-top:1px solid rgba(222,255,241,.5)}.race-straight:after{content:"";position:absolute;inset:8px 18px;border-top:1px dashed rgba(244,255,238,.75)}
+    .parking{position:absolute;z-index:4;left:6%;bottom:7%;width:28%;height:14%;transform:skewY(-12deg);background:repeating-linear-gradient(90deg,rgba(201,219,218,.72) 0 1px,transparent 1px 20px),linear-gradient(155deg,#526d75,#314e59);border:1px solid rgba(223,255,252,.35);box-shadow:0 11px 15px rgba(1,13,21,.38)}.parking:after{content:"PARKING";position:absolute;left:8px;top:6px;font:9px "DM Mono",monospace;color:#d2f2ed;letter-spacing:.1em}
+    .zone-pin{--heat:#67d39c;--heat-glow:rgba(103,211,156,.2);position:absolute;z-index:7;min-width:76px;padding:7px 8px 6px;border-radius:8px;background:rgba(4,25,38,.86);border:1px solid color-mix(in srgb,var(--heat) 65%,transparent);box-shadow:0 0 18px var(--heat-glow),0 6px 10px rgba(0,0,0,.22);font-size:9px;line-height:1.25;color:#d6e9ee;transition:.55s;transform:translate(-50%,-50%)}.zone-pin:before{content:"";position:absolute;width:8px;height:8px;border-radius:50%;left:50%;bottom:-5px;transform:translateX(-50%);background:var(--heat);box-shadow:0 0 13px var(--heat)}.zone-pin strong{display:block;color:var(--heat);font:600 11px "DM Mono",monospace;margin-top:3px}.zone-pin .barline{height:2px;margin-top:5px;background:linear-gradient(90deg,var(--heat) var(--fill),rgba(255,255,255,.16) var(--fill))}.pin-start{left:67%;top:64%}.pin-race1{left:79%;top:46%}.pin-race2{left:70%;top:30%}.pin-race3{left:53%;top:53%}.pin-return{left:51%;top:75%}.pin-outdoor{left:41%;top:75%}.pin-parking{left:17%;top:79%}.pin-viewing{left:84%;top:70%}
+    .side{display:flex;flex-direction:column;gap:14px}.zone-list{padding:0 17px 10px;max-height:370px;overflow:auto}.zone-row{display:grid;grid-template-columns:7px 1fr auto;gap:9px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(177,217,230,.09)}.zone-row:last-child{border:0}.zone-row i{width:7px;height:7px;border-radius:50%;background:var(--heat);box-shadow:0 0 9px var(--heat)}.zone-row .zn{font-size:11px;font-weight:600}.zone-row .za{display:block;font-size:9px;color:var(--muted);margin-top:2px}.zone-row .zv{text-align:right;font:600 11px "DM Mono",monospace}.zone-row .zv span{display:block;font:9px "Noto Sans KR",sans-serif;color:var(--muted);margin-top:2px}.forecast-wrap{padding:3px 17px 17px}.forecast{height:104px;display:grid;grid-template-columns:repeat(7,1fr);gap:7px;align-items:end}.forecast-col{height:100%;display:flex;align-items:end;justify-content:center;position:relative}.forecast-col b{width:100%;max-width:22px;background:linear-gradient(180deg,#77e3e9,#33789a);border-radius:5px 5px 2px 2px;box-shadow:0 0 13px rgba(100,220,232,.25)}.forecast-col span{position:absolute;bottom:-19px;font:9px "DM Mono",monospace;color:var(--muted)}.forecast-note{margin-top:29px;padding:10px 11px;border-radius:9px;background:rgba(93,203,191,.08);border:1px solid rgba(99,218,204,.14);font-size:10px;line-height:1.55;color:#bbd6dc}.source-card{padding:15px 18px}.source-line{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:8px}.source-line b{font:600 11px "DM Mono",monospace;color:#c8edf3}.source-line small{font-size:10px;color:var(--muted)}.fallback{font-size:10px;color:#9eb8c4;line-height:1.55;margin:12px 0 0}.footer{padding:14px 4px 0;color:#7f9aa7;font-size:10px;line-height:1.6}
+    @media(max-width:1100px){.layout{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.source-card{grid-column:span 2}.scene{min-height:590px}}@media(max-width:700px){.shell{padding:16px}.header{align-items:flex-start}.header-right{display:block}.updated{margin-top:8px}.metrics{grid-template-columns:1fr 1fr}.metric{min-height:92px;padding:14px}.metric .value{font-size:25px}.scene{min-height:530px}.side{display:block}.side>.panel{margin-top:14px}.source-card{margin-top:14px}.building{left:-3%;width:56%;top:33%}.track-wrap{right:-20%;width:85%;top:22%}.scene-label.indoor-label{top:22%;left:5%}.legend{display:none}.zone-pin{transform:translate(-50%,-50%) scale(.85)}.pin-race1{left:81%}.pin-viewing{left:82%}}@media(max-width:430px){.header-right{display:none}.metrics{gap:8px}.metric .value.time{font-size:16px}.scene{min-height:480px}.room .room-name{font-size:7px}.building{width:61%}.zone-pin{min-width:63px;padding:5px;font-size:7px}.zone-pin strong{font-size:9px}}
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="top">
-    <div class="brand"><h1>JEJU NOW — 9.81 PARK</h1><p>실내·실외 3D 혼잡 디지털트윈 · SKT Fusion Ready</p></div>
-    <div class="badge"><span class="livepulse"></span><span id="source">ESTIMATED LIVE</span></div>
-  </div>
-
-  <div class="grid">
-    <div class="card metric"><small>현재 추정 체류인원</small><strong id="total">-</strong><span id="crowd">-</span></div>
-    <div class="card metric"><small>도민</small><strong id="locals">-</strong><span id="localPct">-</span></div>
-    <div class="card metric"><small>관광객</small><strong id="tourists">-</strong><span id="tourPct">-</span></div>
-    <div class="card metric"><small>추천 방문시간</small><strong style="font-size:24px">15:20–16:40</strong><span>혼잡 완화 예상 시간대</span></div>
-  </div>
-
-  <div class="main">
-    <div class="card scene">
-      <div class="mountain"></div><div class="roof"></div><div class="building"></div>
-      <div class="indoor">
-        <div class="zone">실내 로비 <b id="zlobby">-</b></div>
-        <div class="zone">SPORTS LAB <b id="zsport">-</b></div>
-        <div class="zone">RINGGGO <b id="zring">-</b></div>
-        <div class="zone">SPACE CUP <b id="zspace">-</b></div>
-      </div>
-      <div class="track"></div><div class="start"></div><div class="parking"></div>
-      <div class="pin p1">실외 레이스장</div><div class="pin p2">레이스 출발</div><div class="pin p3">실내동</div>
-    </div>
-
-    <div class="side">
-      <div class="card"><h3>구역별 실시간 현황</h3><div class="zones" id="zones"></div></div>
-      <div class="card" style="margin-top:14px"><h3>향후 3시간 혼잡 예측</h3><div class="forecast" id="forecast"></div><div class="note">실시간 추정값은 5초마다 갱신됩니다. SKT 또는 JTO 피드가 연결되면 해당 값을 기준(anchor)으로 재보정됩니다.</div></div>
-    </div>
-  </div>
-  <div class="footer">※ 현재 수치는 실시간 추정 모델 기반이며 실제 현장 인원과 차이가 있을 수 있습니다. 외부 실증 시에는 SKT 5분 유동인구와 9.81 실제 체류인원으로 별도 검증이 필요합니다.</div>
-</div>
-<script>
-const $=id=>document.getElementById(id);
-function pct(a,b){return b?Math.round(a/b*100):0}
-function apply(d){
-  $('total').textContent=d.people.total.toLocaleString()+'명'; $('crowd').textContent='혼잡도 '+d.crowd.label;
-  $('locals').textContent=d.people.locals.toLocaleString()+'명'; $('tourists').textContent=d.people.tourists.toLocaleString()+'명';
-  $('localPct').textContent=pct(d.people.locals,d.people.total)+'%'; $('tourPct').textContent=pct(d.people.tourists,d.people.total)+'%'; $('source').textContent=d.source;
-  const map=Object.fromEntries(d.zones.map(z=>[z.id,z]));
-  if(map['indoor-lobby']) $('zlobby').textContent=map['indoor-lobby'].count+'명'; if(map['sports-lab']) $('zsport').textContent=map['sports-lab'].count+'명'; if(map['ringggo']) $('zring').textContent=map['ringggo'].count+'명'; if(map['space-cup']) $('zspace').textContent=map['space-cup'].count+'명';
-  $('zones').innerHTML=d.zones.slice(0,9).map(z=>`<div class="zrow"><div><span class="dot ${z.status}"></span>${z.name}</div><div><b>${z.count}명</b><br><small>${z.label}${z.waitMinutes?` · 대기 ${z.waitMinutes}분`:''}</small></div></div>`).join('');
-}
-async function loadForecast(){try{const r=await fetch('/api/v1/parks/981/forecast');const d=await r.json();const max=Math.max(...d.points.map(x=>x.total));$('forecast').innerHTML=d.points.map((x,i)=>`<div><div class="bar" style="height:${Math.max(18,x.total/max*105)}px"></div><div class="ft">${i*30}m<br>${x.total}</div></div>`).join('')}catch{}}
-fetch('/api/v1/parks/981/live').then(r=>r.json()).then(apply).catch(()=>{}); loadForecast(); setInterval(loadForecast,60000);
-const es=new EventSource('/api/v1/parks/981/stream'); es.onmessage=e=>{try{apply(JSON.parse(e.data))}catch{}};
-</script>
+  <main class="shell">
+    <header class="header">
+      <div class="title"><div class="mark"></div><div><div class="eyebrow">Jeju mobility intelligence / 5 sec refresh</div><h1>JEJU NOW <span style="color:#69dfe9">— 9.81 PARK</span></h1></div></div>
+      <div class="header-right"><div class="updated" id="updated">데이터 수신 대기 중</div><div class="badge"><span class="pulse"></span><span id="source">ESTIMATED LIVE</span></div></div>
+    </header>
+    <section class="metrics">
+      <article class="metric total-card"><div class="kicker">Current population</div><div class="value" id="total">—</div><div class="sub">전체 혼잡 <span class="status-word" id="crowd">—</span></div></article>
+      <article class="metric"><div class="kicker">Jeju residents</div><div class="value" id="locals">—</div><div class="sub" id="localPct">—</div></article>
+      <article class="metric"><div class="kicker">Visitors</div><div class="value" id="tourists">—</div><div class="sub" id="tourPct">—</div></article>
+      <article class="metric"><div class="kicker">Recommended arrival</div><div class="value time" id="recommendation">—</div><div class="sub" id="recommendationReason">혼잡 완화 예상 시간대</div></article>
+    </section>
+    <section class="layout">
+      <section class="panel">
+        <div class="panel-head"><div><div class="kicker">Spatial heatmap</div><h2>실내 Cutaway · 실외 레이스 트랙</h2></div><div class="legend"><span><i style="background:#67d39c"></i>쾌적</span><span><i style="background:#f8c86c"></i>보통</span><span><i style="background:#f48b57"></i>혼잡</span><span><i style="background:#ee5d6c"></i>매우 혼잡</span></div></div>
+        <div class="scene">
+          <div class="scene-label indoor-label">BUILDING A<b>INDOOR EXPERIENCE</b></div><div class="scene-label race-label">OUTDOOR ZONE<b>RACE 981 TRACK</b></div>
+          <div class="building"><div class="roof"></div><div class="wall"></div><div class="cutaway">
+            <div class="room" data-zone="indoor-lobby"><span class="room-name">실내 로비</span><span class="room-count">—</span></div>
+            <div class="room" data-zone="sports-lab"><span class="room-name">SPORTS LAB</span><span class="room-count">—</span></div>
+            <div class="room" data-zone="ringggo"><span class="room-name">RINGGGO</span><span class="room-count">—</span></div>
+            <div class="room" data-zone="space-cup"><span class="room-name">SPACE CUP</span><span class="room-count">—</span></div>
+            <div class="room" data-zone="ticket"><span class="room-name">티켓존</span><span class="room-count">—</span></div>
+          </div></div>
+          <div class="track-wrap"><div class="track"><div class="grass"></div></div><div class="lane"></div><div class="race-straight"></div></div><div class="parking"></div>
+          <div class="zone-pin pin-start" data-pin="race-start">레이스 출발<strong>—</strong><div class="barline"></div></div><div class="zone-pin pin-race1" data-pin="race-1">코스 1<strong>—</strong><div class="barline"></div></div><div class="zone-pin pin-race2" data-pin="race-2">코스 2<strong>—</strong><div class="barline"></div></div><div class="zone-pin pin-race3" data-pin="race-3">코스 3<strong>—</strong><div class="barline"></div></div><div class="zone-pin pin-return" data-pin="return">자동회차<strong>—</strong><div class="barline"></div></div><div class="zone-pin pin-outdoor" data-pin="outdoor">야외광장<strong>—</strong><div class="barline"></div></div><div class="zone-pin pin-parking" data-pin="parking">주차장<strong>—</strong><div class="barline"></div></div><div class="zone-pin pin-viewing" data-pin="viewing">관람존<strong>—</strong><div class="barline"></div></div><div class="north">N</div>
+        </div>
+      </section>
+      <aside class="side">
+        <section class="panel"><div class="panel-head"><div><div class="kicker">Zone intelligence</div><h2>구역별 현재 혼잡</h2></div><span class="kicker" id="zoneSum">—</span></div><div class="zone-list" id="zones"></div></section>
+        <section class="panel"><div class="panel-head"><div><div class="kicker">3-hour outlook</div><h2>향후 혼잡 예측</h2></div></div><div class="forecast-wrap"><div class="forecast" id="forecast"></div><div class="forecast-note">혼잡도는 체류인원 추정값과 시간대 패턴을 합성합니다. SKT/JTO 피드가 살아 있으면 해당 값을 기준값으로 재보정합니다.</div></div></section>
+        <section class="panel source-card"><div class="kicker">Data provenance</div><div class="source-line"><b id="mode">ESTIMATED</b><small id="providerState">안전한 fallback 작동 중</small></div><p class="fallback" id="sourceDetail">SKT/JTO 연결 정보가 설정되면 5분 단위 데이터를 자동 수집합니다. 수신 지연·오류 시에는 추정 모드로 안전하게 전환됩니다.</p></section>
+      </aside>
+    </section>
+    <footer class="footer">※ 추정 모드는 데모·운영 의사결정 보조용입니다. 개별 구역의 실제 체류/대기 시간은 9.81 내부 운영 신호로 별도 검증이 필요합니다.</footer>
+  </main>
+  <script>
+    const $ = id => document.getElementById(id);
+    const heat = {good:['#67d39c','rgba(103,211,156,.25)'],normal:['#f8c86c','rgba(248,200,108,.26)'],busy:['#f48b57','rgba(244,139,87,.29)'],'very-busy':['#ee5d6c','rgba(238,93,108,.32)']};
+    const percent = (a,b) => b ? Math.round(a / b * 100) : 0;
+    const formatKst = iso => new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).format(new Date(iso));
+    function styleZone(element, zone) { const [color, glow] = heat[zone.status] || heat.normal; element.style.setProperty('--heat',color); element.style.setProperty('--heat-glow',glow); element.style.setProperty('--fill',Math.min(100,Math.round(zone.ratio*100))+'%'); }
+    function apply(data) {
+      $('total').textContent = data.people.total.toLocaleString() + '명'; $('locals').textContent = data.people.locals.toLocaleString() + '명'; $('tourists').textContent = data.people.tourists.toLocaleString() + '명';
+      $('crowd').textContent = data.crowd.label; $('localPct').textContent = '전체의 ' + percent(data.people.locals,data.people.total) + '%'; $('tourPct').textContent = '전체의 ' + percent(data.people.tourists,data.people.total) + '%';
+      $('source').textContent = data.source; $('updated').textContent = '최종 계산 ' + formatKst(data.observedAt) + ' KST'; $('recommendation').textContent = data.recommendation.label; $('recommendationReason').textContent = data.recommendation.reason;
+      $('mode').textContent = data.mode === 'skt-realtime' ? 'SKT / JTO REALTIME' : 'ESTIMATED SAFE MODE';
+      $('providerState').textContent = data.mode === 'skt-realtime' ? '실시간 anchor 적용 중' : '안전한 fallback 작동 중';
+      $('sourceDetail').textContent = data.mode === 'skt-realtime' ? '외부 유동인구 anchor를 구역 비중에 맞춰 보정하여 표시합니다. 구역별 값은 별도 현장 검증 전 추정치입니다.' : 'SKT/JTO 자격증명 또는 피드가 없거나 신선하지 않아, 시간대 기반 추정 모델을 표시합니다.';
+      $('zoneSum').textContent = 'Σ ' + data.zones.reduce((sum,z)=>sum+z.count,0).toLocaleString() + '명';
+      for (const zone of data.zones) {
+        const room = document.querySelector('[data-zone="'+zone.id+'"]'); if (room) { styleZone(room,zone); room.querySelector('.room-count').textContent = zone.count+'명'; }
+        const pin = document.querySelector('[data-pin="'+zone.id+'"]'); if (pin) { styleZone(pin,zone); pin.querySelector('strong').textContent = zone.count+'명'; pin.title = zone.name+' · '+zone.label+' · '+zone.count+'명'; }
+      }
+      $('zones').innerHTML = data.zones.map(zone => { const [color] = heat[zone.status] || heat.normal; return '<div class="zone-row" style="--heat:'+color+'"><i></i><div><div class="zn">'+zone.name+'</div><span class="za">'+(zone.area==='indoor'?'실내':'실외')+' · 수용률 '+Math.round(zone.ratio*100)+'%</span></div><div class="zv">'+zone.count+'명<span>'+zone.label+(zone.waitMinutes?' · '+zone.waitMinutes+'분':'')+'</span></div></div>'; }).join('');
+    }
+    async function loadForecast() { try { const response = await fetch('/api/v1/parks/981/forecast'); const data = await response.json(); const max = Math.max(...data.points.map(point=>point.total)); $('forecast').innerHTML = data.points.map((point,index) => '<div class="forecast-col"><b style="height:'+Math.max(12,Math.round(point.total/max*88))+'px"></b><span>'+ (index ? index*30+'m':'NOW') +'</span></div>').join(''); } catch {} }
+    fetch('/api/v1/parks/981/live').then(response=>response.json()).then(apply).catch(()=>{});
+    loadForecast(); setInterval(loadForecast,60_000);
+    const stream = new EventSource('/api/v1/parks/981/stream'); stream.onmessage = event => { try { apply(JSON.parse(event.data)); } catch {} };
+  </script>
 </body>
 </html>

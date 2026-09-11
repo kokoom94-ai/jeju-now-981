@@ -1,115 +1,73 @@
-# JEJU NOW — 9.81 PARK · SKT Fusion Edition
+# JEJU NOW — 9.81 PARK
 
-9.81파크의 실내/실외 3D 디지털트윈에 **SKT 실시간 유동인구를 anchor**로 결합하고, 5초 단위 화면 보간과 80/90 정확도 검증 Gate를 적용한 외부배포용 버전입니다.
+9.81파크의 실내·실외 혼잡을 보여주는 단일 Node 서비스입니다. 메인 화면은 실내 Cutaway와 야외 RACE 981 트랙의 zone heatmap을 표시하며, 데이터 원천이 없거나 신선하지 않으면 안전하게 추정 모드로 동작합니다.
 
-## 중요
+## 데이터 동작 방식
 
-- `SKT 연결 = 90% 보장`이 아닙니다.
-- 90%는 **9.81 실제 체류인원과 매칭한 holdout 검증에서 Accuracy = 100 - MAPE가 90 이상**일 때만 달성으로 표시됩니다.
-- 운영 하한선은 80입니다.
-- SKT만으로 실내 층/개별 어트랙션 Zone별 80% 정확도를 보장할 수 없습니다. Zone별 80% 목표는 9.81의 탑승/게이트/AI Counting 등 내부 신호가 추가되어야 합니다.
+1. `JTO_SKT_API_URL`이 설정된 경우 서버가 5분 간격(기본값)으로 JTO/SKT 피드를 HTTPS로 가져옵니다.
+2. 수신값은 총인원·도민·관광객·관측시각을 검증하고, 신선한 값만 전체 인원의 anchor로 사용합니다.
+3. 피드 오류, 지연, 잘못된 응답 또는 자격증명 미설정 시 서비스는 중단하지 않고 `ESTIMATED LIVE`로 자동 fallback 합니다.
+4. 외부 중계 시스템이 push 방식만 지원하면 인증된 `POST /api/v1/ingest/skt`를 사용할 수 있습니다.
 
-## 데이터 우선순위
+서버는 재시도 시 지수 backoff, 12초 요청 timeout, 최대 관측 연령 검사(기본 15분), 제한된 request body, 인증 없는 ingest 차단을 적용합니다. `/health`와 `/api/v1/parks/981/skt/status`에서 비밀값 없이 연결 상태를 확인할 수 있습니다.
 
-1. `JTO_SKT_REALTIME` — 제주관광 빅데이터 플랫폼의 SKT 5분 유동인구/도민·관광객 집계 feed (권장)
-2. `SKT_OPENAPI_PLACE` — SK open API 장소 혼잡도 (fallback / calibration metric)
-3. 데이터 미연결 시 기존 시간대 기반 DEMO fallback
+## Render 환경변수
 
-## 바로 실행
+기본 배포에는 아래 두 값만 필요합니다. `render.yaml`은 `INGEST_TOKEN`을 자동 생성합니다.
 
-```bash
-npm start
-# http://localhost:8080
-```
+| 변수 | 값 | 용도 |
+|---|---|---|
+| `DATA_MODE` | `auto` | JTO/SKT가 준비되면 사용, 아니면 추정 모드 |
+| `INGEST_TOKEN` | 긴 무작위 비밀값 | push ingest 인증 |
 
-## JTO/SKT 5분 피드 연결 — 권장
+실제 JTO/SKT feed가 발급되면 Render의 Secret 환경변수에만 다음을 추가합니다.
 
-서버가 직접 pull할 수 있으면 `.env` 또는 Render 환경변수에:
+| 변수 | 예시 | 용도 |
+|---|---|---|
+| `JTO_SKT_API_URL` | `https://<approved-jto-endpoint>` | HTTPS pull endpoint |
+| `JTO_SKT_API_TOKEN` | `<secret>` | API token |
+| `JTO_SKT_POLL_MS` | `300000` | 수집 주기(최소 60000) |
+| `JTO_SKT_AUTH_HEADER` | `Authorization` | 인증 header 이름 |
+| `JTO_SKT_AUTH_SCHEME` | `Bearer` | token 앞 접두어 |
+| `JTO_SKT_TOTAL_PATH` | `data.people.total` | 실제 응답의 총인원 필드 경로 |
+| `JTO_SKT_LOCALS_PATH` | `data.people.locals` | 도민 필드 경로 |
+| `JTO_SKT_TOURISTS_PATH` | `data.people.tourists` | 관광객 필드 경로 |
+| `JTO_SKT_OBSERVED_AT_PATH` | `data.observedAt` | 관측시각 필드 경로 |
 
-```text
-DATA_MODE=jto-skt
-JTO_SKT_API_URL=https://<internal-or-proxy-endpoint>
-JTO_SKT_API_TOKEN=<token>
-```
+기본적으로 인식하는 필드는 `people.total`, `data.people.total`, `total`, `data.total`, `visitorCount`, `population` 등입니다. 실제 JTO 응답 구조가 다르면 위의 `*_PATH`만 설정하면 됩니다. `DATA_MODE=estimated`로 설정하면 외부 poll을 명시적으로 끕니다.
 
-또는 공사 내부 시스템/중계 서버가 이 서비스로 5분마다 push:
+## Push ingest 계약
 
-```bash
-curl -X POST https://<service>/api/v1/ingest/skt \
+~~~bash
+curl -X POST https://jeju-now-981.onrender.com/api/v1/ingest/skt \
   -H "Authorization: Bearer $INGEST_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "source":"JTO_SKT_REALTIME",
-    "observedAt":"2026-09-11T12:30:00+09:00",
-    "people":{"total":620,"locals":140,"tourists":480}
+    "source": "JTO_SKT_REALTIME",
+    "observedAt": "2026-09-11T13:50:00+09:00",
+    "people": { "total": 692, "locals": 151, "tourists": 541 }
   }'
-```
+~~~
 
-## SK open API 직접 연결 — fallback
+`observedAt`은 현재 시각 기준 15분 이내여야 합니다. Push anchor는 인메모리 값이므로 Render 인스턴스가 재시작되면 중계 시스템이 다음 5분 주기에 다시 보내야 합니다. 지속적인 운영에서는 JTO pull 연동을 권장합니다.
 
-1. SK open API에서 앱 생성 및 `appKey` 발급
-2. POI 목록에서 9.81파크 제공 여부 확인
-3. 환경변수 입력
+## API
 
-```text
-DATA_MODE=skt-openapi
-SKT_APP_KEY=<secret>
-SKT_POI_ID=<poi id>
-SKT_LAT=33.3928867
-SKT_LNG=126.3586318
-SKT_POLL_MS=300000
-```
+- `GET /health` — 서비스 및 provider 상태
+- `GET /api/v1/parks/981/live` — 현재 데이터, zone, 추천 방문시간
+- `GET /api/v1/parks/981/stream` — 5초 SSE
+- `GET /api/v1/parks/981/forecast` — 향후 3시간 예측
+- `GET /api/v1/parks/981/history` — 최근 화면 계산 이력
+- `GET /api/v1/parks/981/skt/status` — JTO/SKT 연결 진단
+- `POST /api/v1/ingest/skt` — 인증된 push ingest
 
-POI 검색:
+## 실행
 
-```bash
-SKT_APP_KEY=... npm run find:skt-poi
-```
+~~~bash
+npm start
+# http://localhost:8080
+~~~
 
-SK open API 장소 혼잡도 값은 최근 1시간의 면적당 방문자 밀도 성격이므로 바로 '현재 인원'으로 간주하지 않고 calibration metric으로 씁니다.
+## 정확도 고지
 
-## 정확도 80/90 맞추기
-
-### 1) Ground Truth 수집
-실제 9.81파크 체류인원과 같은 시각의 SKT 값을 매칭합니다. 최소 70개, 권장 100~300개. 평일/주말/우천을 섞습니다.
-
-```csv
-observedAt,sktMetric,actualTotal
-2026-09-11T10:00:00+09:00,0.00631,412
-```
-
-### 2) Calibration
-
-```bash
-node scripts/calibrate-skt.mjs data/groundtruth.csv
-```
-
-결과는 `data/skt-calibration.json`에 저장됩니다.
-
-### 3) 합격 기준
-- `< 80%`: 외부 운영 기준 미달
-- `80~89.9%`: 하한 통과
-- `>= 90%`: 목표 달성
-
-서비스 API:
-- `GET /api/v1/parks/981/accuracy`
-- `GET /api/v1/parks/981/skt/status`
-- `POST /api/v1/parks/981/accuracy/ground-truth`
-- `POST /api/v1/parks/981/accuracy/recalibrate`
-
-## 주요 API
-
-- `GET /health`
-- `GET /api/v1/parks/981/live`
-- `GET /api/v1/parks/981/stream` — SSE
-- `GET /api/v1/parks/981/forecast`
-- `GET /api/v1/parks/981/history`
-- `POST /api/v1/ingest/skt`
-- `GET /api/v1/parks/981/skt/status`
-- `GET /api/v1/parks/981/accuracy`
-
-## 외부 배포
-
-Render를 권장합니다. `SKT_APP_KEY`, `JTO_SKT_API_TOKEN`, `ADMIN_TOKEN`, `INGEST_TOKEN`은 GitHub에 넣지 말고 Render의 Secret 환경변수로 입력하세요.
-
-자세한 정확도 설계는 `docs/10_SKT_FUSION_80_90.md`를 확인하세요.
+SKT/JTO 유동인구는 파크 전체 인원의 anchor이며, 개별 실내 공간·어트랙션별 실제 체류인원을 보장하지 않습니다. zone heatmap과 예상 대기시간은 9.81 운영 신호(게이트, 탑승, AI counting 등)로 현장 검증하기 전까지 모델 추정치입니다.

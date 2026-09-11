@@ -10,6 +10,6 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATA_MODE
-        value: estimated
+        value: auto
       - key: INGEST_TOKEN
         generateValue: true
