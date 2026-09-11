@@ -1,0 +1,144 @@
+{
+  "url": "https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/9e204f102de01561a7d7ffb193a5011a5f92adbc/real.html",
+  "testedAt": "2026-09-11T12:46:21.766Z",
+  "runId": "34600435604",
+  "ok": false,
+  "passed": 17,
+  "checks": [
+    {
+      "name": "Desktop HTTPS page responds 200",
+      "passed": true
+    },
+    {
+      "name": "Actual public HTTPS origin and native storage",
+      "passed": true
+    },
+    {
+      "name": "Actual OSM geometry, no schematic fallback",
+      "passed": true,
+      "details": {
+        "version": "2.0.0-realism-beta",
+        "renderer": "Three.js r180 / PBR",
+        "mapMode": "osm",
+        "roads": 7562,
+        "buildings": 10617,
+        "sourceBuildings": 10617,
+        "coast": "OSM",
+        "photoTexturesLoaded": 6,
+        "photoTextureErrors": [],
+        "frames": 4,
+        "drawCalls": 235,
+        "triangles": 1161665,
+        "preset": "day",
+        "shadows": true,
+        "quality": "high",
+        "streetViewPhotography": false,
+        "satelliteImagery": false,
+        "facadesSurveyed": false,
+        "positions": [
+          126.462,
+          33.468,
+          126.575,
+          33.536
+        ],
+        "trees": 3200
+      }
+    },
+    {
+      "name": "Six self-hosted photo textures loaded",
+      "passed": true
+    },
+    {
+      "name": "Unverified facades and photography state truthful",
+      "passed": true
+    },
+    {
+      "name": "Golden-hour lighting changes",
+      "passed": true
+    },
+    {
+      "name": "Blue-hour lighting changes",
+      "passed": true
+    },
+    {
+      "name": "Light rendering mode disables shadows",
+      "passed": true
+    },
+    {
+      "name": "High-quality shadow mode restored",
+      "passed": true
+    },
+    {
+      "name": "Cinematic mode hides sidebar",
+      "passed": true
+    },
+    {
+      "name": "Existing 32 curated place records retained",
+      "passed": true
+    },
+    {
+      "name": "Seven hotel records retained",
+      "passed": true
+    },
+    {
+      "name": "Hotel search",
+      "passed": true
+    },
+    {
+      "name": "Information popup opens",
+      "passed": true
+    },
+    {
+      "name": "Official Naver search link retained",
+      "passed": true
+    },
+    {
+      "name": "Character persists in real HTTPS storage",
+      "passed": true
+    },
+    {
+      "name": "Itinerary persists on reload",
+      "passed": true
+    },
+    {
+      "name": "Keyboard moves character along the real-road graph",
+      "passed": false
+    }
+  ],
+  "errors": [],
+  "failedRequests": [
+    {
+      "url": "https://server.ethicalads.io/proxy/viewtime/10792/01a0907f-72fe-7a72-bb2b-26d77d5e60a7/?view_time=1",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "failure": "Error: Keyboard moves character along the real-road graph",
+  "desktopStatus": {
+    "version": "2.0.0-realism-beta",
+    "renderer": "Three.js r180 / PBR",
+    "mapMode": "osm",
+    "roads": 7562,
+    "buildings": 10617,
+    "sourceBuildings": 10617,
+    "coast": "OSM",
+    "photoTexturesLoaded": 6,
+    "photoTextureErrors": [],
+    "frames": 4,
+    "drawCalls": 235,
+    "triangles": 1161665,
+    "preset": "day",
+    "shadows": true,
+    "quality": "high",
+    "streetViewPhotography": false,
+    "satelliteImagery": false,
+    "facadesSurveyed": false,
+    "positions": [
+      126.462,
+      33.468,
+      126.575,
+      33.536
+    ],
+    "trees": 3200
+  },
+  "scope": "Real HTTPS origin in desktop/mobile-sized Chromium with software WebGL2. Not a real-device benchmark, surveying, Naver validation, or street photography."
+}
