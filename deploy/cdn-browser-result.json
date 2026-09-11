@@ -1,0 +1,101 @@
+{
+  "url": "https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/7e6e839b847fcf98d1069a89ae2ec70ccdbc9417/index.html",
+  "testedAt": "2026-09-11T11:10:30.808Z",
+  "runId": "34592660518",
+  "ok": true,
+  "passed": 22,
+  "checks": [
+    {
+      "name": "Desktop HTTPS responds 200",
+      "passed": true
+    },
+    {
+      "name": "Actual public origin, no storage test doubles",
+      "passed": true
+    },
+    {
+      "name": "WebGL renders and 32 places load",
+      "passed": true
+    },
+    {
+      "name": "Schematic limitations remain visible",
+      "passed": true
+    },
+    {
+      "name": "Seven hotel cards",
+      "passed": true
+    },
+    {
+      "name": "Search finds one hotel",
+      "passed": true
+    },
+    {
+      "name": "Place information popup opens",
+      "passed": true
+    },
+    {
+      "name": "Naver link uses official map search",
+      "passed": true
+    },
+    {
+      "name": "Itinerary saves a place",
+      "passed": true
+    },
+    {
+      "name": "Avatar customization",
+      "passed": true
+    },
+    {
+      "name": "Character persists in real HTTPS localStorage",
+      "passed": true
+    },
+    {
+      "name": "Itinerary persists after actual reload",
+      "passed": true
+    },
+    {
+      "name": "Keyboard moves avatar",
+      "passed": true
+    },
+    {
+      "name": "Three walking tours available",
+      "passed": true
+    },
+    {
+      "name": "Automatic walk progresses",
+      "passed": true
+    },
+    {
+      "name": "Manual input stops automatic walk",
+      "passed": true
+    },
+    {
+      "name": "Mobile HTTPS responds 200",
+      "passed": true
+    },
+    {
+      "name": "Mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Mobile place popup opens",
+      "passed": true
+    },
+    {
+      "name": "Mobile walking mode starts",
+      "passed": true
+    },
+    {
+      "name": "Mobile joystick moves avatar",
+      "passed": true
+    },
+    {
+      "name": "No browser runtime errors",
+      "passed": true,
+      "details": []
+    }
+  ],
+  "errors": [],
+  "failure": null,
+  "notes": "Live HTTPS desktop/mobile Chromium tests. No storage mocks; no claim of actual OSM or Naver API integration."
+}
