@@ -1,0 +1,69 @@
+name: Stage and verify JEJU precision connection gate
+on:
+  push:
+    branches: [jeju-before-web]
+    paths:
+      - precision/app.mjs
+      - precision/index.html
+      - precision/session.mjs
+      - precision/session.test.mjs
+      - precision/prepare.mjs
+      - precision/publish.mjs
+      - precision/verify.cjs
+      - .github/workflows/jeju-precision-stage.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: jeju-precision-stage
+  cancel-in-progress: false
+jobs:
+  stage:
+    if: github.ref == 'refs/heads/jeju-before-web'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prepare isolated static bundle
+        run: node precision/prepare.mjs
+      - name: Run unit and safety contract tests
+        run: |
+          set -o pipefail
+          mkdir -p precision-qa
+          node --test precision/contract.test.mjs precision/session.test.mjs | tee precision-qa/unit-tests.txt
+      - name: Stage Pages branch and publish key-disabled preview
+        run: node precision/publish.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Install browser test runner
+        run: npm install --prefix "$RUNNER_TEMP/precision-browser" --no-audit --no-fund playwright@1.55.0
+      - name: Check public desktop and mobile preview plus local connection gate
+        run: node precision/verify.cjs
+        env:
+          PLAYWRIGHT_ROOT: ${{ runner.temp }}/precision-browser
+      - name: Record exact publication and verification on isolated source branch
+        if: always()
+        run: |
+          git config user.name 'JEJU BEFORE build'
+          git config user.email 'jeju-before-build@users.noreply.github.com'
+          git add precision/bridge.mjs
+          for f in precision/publication.json precision/browser-result.json; do
+            if test -f "$f"; then git add "$f"; fi
+          done
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record precision gate publication and no-key browser checks [skip ci]'
+            git pull --rebase origin jeju-before-web
+            git push origin HEAD:jeju-before-web
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jeju-precision-connection-qa
+          path: |
+            precision-qa/
+            _precision_site/
+          retention-days: 14
+          include-hidden-files: true
