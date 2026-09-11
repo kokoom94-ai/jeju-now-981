@@ -1,0 +1,322 @@
+[
+  {
+    "id": "mokgwana",
+    "name": "제주목 관아",
+    "lon": 126.5217,
+    "lat": 33.5139,
+    "category": "attraction",
+    "address": "관덕로 25",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "gwandeok",
+    "name": "관덕정",
+    "lon": 126.52155,
+    "lat": 33.51325,
+    "category": "attraction",
+    "address": "삼도동 관덕정 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "sanjicheon",
+    "name": "산지천",
+    "lon": 126.52885,
+    "lat": 33.5134,
+    "category": "attraction",
+    "address": "산지천 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "tapdong",
+    "name": "탑동광장",
+    "lon": 126.5282,
+    "lat": 33.51935,
+    "category": "attraction",
+    "address": "탑동광장 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "yongduam",
+    "name": "용두암",
+    "lon": 126.51165,
+    "lat": 33.51605,
+    "category": "attraction",
+    "address": "용두암길 15",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "yongyeon",
+    "name": "용연구름다리",
+    "lon": 126.5143,
+    "lat": 33.5146,
+    "category": "attraction",
+    "address": "용연 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "ohyeon",
+    "name": "오현단·제주성지",
+    "lon": 126.5263,
+    "lat": 33.5091,
+    "category": "attraction",
+    "address": "오현단 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "samsung",
+    "name": "삼성혈",
+    "lon": 126.5294,
+    "lat": 33.50545,
+    "category": "attraction",
+    "address": "삼성혈 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "museum-nature",
+    "name": "제주민속자연사박물관",
+    "lon": 126.5312,
+    "lat": 33.5063,
+    "category": "attraction",
+    "address": "일도동 박물관 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "sinsan",
+    "name": "신산공원",
+    "lon": 126.5336,
+    "lat": 33.5045,
+    "category": "attraction",
+    "address": "일도동 신산공원 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "kimmanduk",
+    "name": "김만덕기념관",
+    "lon": 126.5316,
+    "lat": 33.51595,
+    "category": "attraction",
+    "address": "건입동 기념관 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "sarabong",
+    "name": "사라봉공원",
+    "lon": 126.5481,
+    "lat": 33.5179,
+    "category": "attraction",
+    "address": "건입동 사라봉 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "lighthouse",
+    "name": "산지등대",
+    "lon": 126.5478,
+    "lat": 33.52065,
+    "category": "attraction",
+    "address": "건입동 산지등대 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "national-museum",
+    "name": "국립제주박물관",
+    "lon": 126.5482,
+    "lat": 33.51365,
+    "category": "attraction",
+    "address": "건입동 박물관 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "hyanggyo",
+    "name": "제주향교",
+    "lon": 126.5131,
+    "lat": 33.5093,
+    "category": "attraction",
+    "address": "용담동 제주향교 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "dumaeng",
+    "name": "두맹이골목",
+    "lon": 126.53665,
+    "lat": 33.5098,
+    "category": "attraction",
+    "address": "일도동 두맹이골목 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "dongmun",
+    "name": "동문시장",
+    "lon": 126.5266,
+    "lat": 33.5114,
+    "category": "attraction",
+    "address": "일도동 동문시장 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "chilsung",
+    "name": "칠성로",
+    "lon": 126.52575,
+    "lat": 33.5134,
+    "category": "attraction",
+    "address": "일도동 칠성로 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "park-buksu",
+    "name": "북수구 공영주차장",
+    "lon": 126.52825,
+    "lat": 33.5146,
+    "category": "parking",
+    "address": "일도동 북수구 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "park-dongmun",
+    "name": "동문재래시장 공영주차장",
+    "lon": 126.5287,
+    "lat": 33.5105,
+    "category": "parking",
+    "address": "동문시장 주변",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "park-yongdu",
+    "name": "용두암 공영주차장",
+    "lon": 126.5123,
+    "lat": 33.5154,
+    "category": "parking",
+    "address": "용두암 주변",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "park-gwan",
+    "name": "관덕정 인근 공영주차장",
+    "lon": 126.52025,
+    "lat": 33.5136,
+    "category": "parking",
+    "address": "관덕정 주변",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "park-sara",
+    "name": "사라봉 공영주차장",
+    "lon": 126.5459,
+    "lat": 33.5165,
+    "category": "parking",
+    "address": "사라봉공원 주변",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "park-airport",
+    "name": "제주공항 여객주차장",
+    "lon": 126.4958,
+    "lat": 33.50365,
+    "category": "parking",
+    "address": "제주국제공항 여객터미널 앞",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "ocean",
+    "name": "오션스위츠 제주호텔",
+    "lon": 126.5241,
+    "lat": 33.5195,
+    "category": "hotel",
+    "address": "탑동 해안 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "regent",
+    "name": "호텔 리젠트마린 제주",
+    "lon": 126.5286,
+    "lat": 33.5186,
+    "category": "hotel",
+    "address": "탑동 해안 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "whistle",
+    "name": "호텔 휘슬락 제주",
+    "lon": 126.52935,
+    "lat": 33.5181,
+    "category": "hotel",
+    "address": "서부두2길 26",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "oriental",
+    "name": "제주 오리엔탈호텔",
+    "lon": 126.5216,
+    "lat": 33.518,
+    "category": "hotel",
+    "address": "탑동로 47",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "ramada",
+    "name": "라마다프라자 제주호텔",
+    "lon": 126.5185,
+    "lat": 33.5187,
+    "category": "hotel",
+    "address": "탑동로 66",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "palace",
+    "name": "제주팔레스호텔",
+    "lon": 126.52615,
+    "lat": 33.5181,
+    "category": "hotel",
+    "address": "탑동 해안 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "asta",
+    "name": "아스타호텔",
+    "lon": 126.5182,
+    "lat": 33.50045,
+    "category": "hotel",
+    "address": "삼도동 도심 일대",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  },
+  {
+    "id": "cju",
+    "name": "제주국제공항",
+    "lon": 126.4936,
+    "lat": 33.5062,
+    "category": "transport",
+    "address": "제주시 공항로 2",
+    "coordinateStatus": "approximate",
+    "naverVerified": false
+  }
+]

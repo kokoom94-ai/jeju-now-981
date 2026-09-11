@@ -1,0 +1,11 @@
+{
+  "app": "JEJU:BEFORE precision",
+  "version": "3.1.0-connection-gate",
+  "sourceBranch": "jeju-before-web",
+  "siteBranch": "jeju-precision-site",
+  "places": 32,
+  "generatedBuildingFallback": false,
+  "providerConfigured": false,
+  "productionReady": false,
+  "plannedDedicatedUrl": "https://kokoom94-ai.github.io/jeju-now-981/"
+}

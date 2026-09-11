@@ -1,0 +1,88 @@
+# JEJU:BEFORE precision — connection gate
+
+Version: 3.1.0-connection-gate
+
+This site has no API credential and no verified Jeju precision building connection. It does not draw substitute buildings. Existing main and real.html remain unchanged.
+
+## Dedicated hosting setup
+
+GitHub Settings > Pages > Deploy from a branch > jeju-precision-site > /(root). This setting is not changed by the workflow.
+Planned dedicated URL (not active until Pages is enabled): https://kokoom94-ai.github.io/jeju-now-981/
+The shared rawcdn preview disables the key field and refuses SDK requests.
+A user-owned VWorld WebGL 3D key must be registered to the dedicated site and entered there, not in chat, GitHub source or the shared CDN. No key is stored by this app.
+
+## Observation records
+
+Six area review targets, not surveyed administrative boundaries. One picked Cesium tile feature is only an object observation. Selection position must be within the project extent and within 1,700m of the chosen review point. This is NOT proof that it lies within the administrative region. All accuracy, full-coverage, source-date and walking validation flags remain false or null. Reload clears records; export the diagnostic JSON first.
+
+## Build and test
+
+Source: precision/ on jeju-before-web. Run node precision/prepare.mjs, node --test precision/*.test.mjs, then serve _precision_site. The browser QA checks the real public preview in the unconfigured state and a local dedicated-host layout. It does NOT simulate a successful provider connection.
+
+---
+
+# JEJU:BEFORE — 실제 건물 원본 3D 연동 준비
+
+## 현재 상태
+
+기존 `real.html` 및 9.81 운영용 `main` 브랜치는 변경하지 않았습니다. 이 폴더는 별도의 **연결·검증 준비 코드**이며 실제 제주 건물 원본이 연결된 완성본이 아닙니다.
+
+- 공식 VWorld WebGL 3.0 JavaScript SDK 연결 어댑터 작성.
+- 원도심·공항·관덕정·동문시장·용담동·건입동·이도동 카메라 프리셋 작성. 카메라 좌표는 확인용 대표점이지 검증된 보행 출발점이나 출입구가 아닙니다.
+- 원본 3D 객체 선택 및 공개된 원본 속성 표시 코드 작성. 임의 건물 높이·지붕·모형은 생성하지 않습니다.
+- 기존 32개 장소를 원본 `index.html` 데이터에서 읽어 목록·팝업·네이버 검색 링크로 사용. 좌표·네이버 정보 검증 상태는 그대로 미검증입니다.
+- 인증키 미입력 상태에서는 SDK를 요청하지 않으며 대체 건물도 그리지 않습니다.
+- 뷰어 초기화, 개별 3D 객체 선택, 범위·높이·지붕 검증을 구분합니다. SDK 로드나 한 객체 선택만으로 `productionReady`를 참으로 만들지 않습니다.
+- 입력하는 것은 본인 서비스용 JavaScript 공개 인증키입니다. 자체 코드에서는 키를 GitHub·서버·브라우저 저장소·페이지 URL에 저장하지 않습니다. SDK 요청에서 키는 브라우저에 보이는 구조이므로 등록 도메인 제한을 적용해야 합니다. 제공기관의 SDK 내부 동작까지 별도로 감사한 것은 아닙니다.
+- 이 정밀 지도 화면에는 보행 캐릭터를 이식하지 않았습니다. 기존 보행 모드는 `real.html`에서 유지됩니다. 실제 지형과 보행망·충돌·카메라를 검증한 뒤 통합해야 합니다.
+
+현재 인증키는 **미설정**, 실제 제공기관 SDK 실행·인증 성공 응답·제주 건물 수신·지형 정합·행정동 전체 포함·건물 높이 및 지붕 일치 검증은 모두 **미완료**입니다. 새 정밀지도 운영 배포를 완료했다고 주장하지 않습니다.
+
+## 기존 모델과 다른 목표
+
+기존 수신 기록에는 건물 10,617개 중 높이 태그 10개, 층수×가정 3m 663개, 높이 가정 9m 9,944개가 있습니다. 높이 태그가 있다는 것 자체도 실측·최신성을 인증하지 않습니다. 텍스처를 개선하거나 층수를 곱하는 것만으로 실제 외형과 동일한 모델이 되지 않습니다.
+
+목표는 건물의 XY 윤곽뿐 아니라 높이, 지붕, 단차·돌출부와 지형이 실제 원본에 기반하는 인터랙티브 3D입니다. 도시 전체에는 지붕 형상이 포함된 데이터, 주요 명소에는 처마·외벽·출입구 등 상세 형상을 가진 데이터가 필요합니다. 파일이 3D Tiles나 CityGML 형식이라는 사실만으로 정확도·최신성·제주 지역 포함이 보장되지는 않습니다.
+
+## 먼저 필요한 것
+
+### 브이월드 경로
+
+본인 또는 기관 명의로 발급된 **3D 지도용 JavaScript API 인증키**와 해당 키에 등록한 **전용 HTTPS 서비스 주소**가 필요합니다. 공식 문서상 회원가입 후 인증키 발급 절차가 있습니다. 다른 서비스·교육 예제의 키를 재사용하지 않습니다. 운영용 키를 공유 CDN 테스트 화면에 입력하지 마세요.
+
+키만 있으면 모든 범위의 정밀 건물이 자동 보장되는 것은 아닙니다. 일도동·이도동·건입동·삼도동·용담동과 제주공항 일대의 제공 범위, 해상도, 건물 형상, 촬영·구축 연도를 실제 서비스에서 확인해야 합니다.
+
+### 별도 원본 데이터 경로
+
+브이월드 데이터가 필요한 범위·품질을 충족하지 못할 경우 제주도 공간정보·디지털트윈 담당 부서, LX 또는 정밀 공간정보 제작기관에 아래 자료의 **보유·제공 가능 여부**를 확인합니다. 해당 자료가 이미 확보됐거나 제공 승인됐다는 의미는 아닙니다.
+
+> 제주시 일도동·이도동·건입동·삼도동·용담동 및 제주국제공항 일대의 공개 웹 관광 서비스 구현을 위한 3차원 건물 원본과 지형 데이터 제공 가능 여부를 문의합니다. 건물별 실제 높이 및 지붕·외벽 형상, 좌표계와 수직 기준, 건물 식별자, 촬영·구축·갱신 시점, 제공 범위 폴리곤, 정확도 정보, 외부 공개·재배포 조건, 보안상 제외 구역과 연계 API 또는 파일 형식을 함께 확인 요청드립니다.
+
+희망 납품 구성은 원본 건물 모델(3D Tiles/CityGML/지리참조된 GLB 등), 지형 DEM/DTM, 기준점·좌표계·수직기준, 건물/장소 ID 매핑, 공개 이용조건입니다. 항공사진 한 장이나 건물 층수 목록만으로는 상세 형상을 대체할 수 없습니다. 포맷 변환·호스팅이 필요한 경우 별도 작업입니다.
+
+## 실행과 테스트
+
+저장소 루트를 정적 웹서버로 제공한 뒤 `precision/index.html`을 엽니다. 배포 시 `precision/`과 기존 `index.html`을 함께 제공해야 장소 목록도 열립니다. 이 페이지를 여는 것과 실제 원본 지도 연결 성공은 다릅니다.
+
+Node.js 22: `node --test precision/contract.test.mjs`
+
+로컬에서 상태·입력 처리 및 스크립트 생성 관련 15개 검사를 통과했습니다. 공급자 연결을 모의 성공시킨 검사나 실측 정확도 검사가 아닙니다. 로컬 브라우저 검사는 실행 환경의 탐색 제한으로 완료하지 못했습니다. 실제 브라우저에서 SDK·제주 모델을 받은 end-to-end 검증은 인증키 확보 후 별도로 필요합니다.
+
+## 완료 판정 기준
+
+1. 인증된 서비스에서 실제 3D 모델 타일과 지형을 성공적으로 수신하고 미지원·미수신 구역을 구분할 것.
+2. 요청 행정동 경계 및 공항 범위에 대해 데이터 포함 여부를 공간적으로 검사할 것. 기존 사각형 BBOX만으로 전체 포함을 선언하지 않을 것.
+3. 표본 건물의 높이·지붕·단차·위치와 지형 기준을 신뢰 가능한 원본 및 사진·측량 자료와 대조할 것. 허용 오차는 제공 데이터의 정확도와 사업 요구 수준에 맞춰 사전에 정할 것.
+4. 관광지·주차장·호텔을 실제 건물 및 검증된 출입구와 연결할 것. 지도에 마커만 표시됐다고 검증 완료로 판단하지 않을 것.
+5. 보행 캐릭터의 지면 접촉, 건물 관통 방지, 지형 경사, 계단·횡단보도와 공항 제한구역 제외를 별도로 검사할 것. 지형 렌더링이나 카메라 충돌 기능을 보행 안전 인증으로 대체하지 않을 것.
+6. 실제 iPhone/Android/PC에서 로딩·조작·성능을 확인하고 운영 출처·라이선스·갱신일·한계를 표시할 것.
+
+## 공식 근거
+
+- 공공데이터포털, 국토교통부 웹지엘 3D 지도 API: https://www.data.go.kr/data/3073144/openapi.do
+- V-world 공식 API 샘플 및 2026 교육: https://github.com/V-world/V-world_API_sample
+- OGC CityGML 3.0 Conceptual Model: https://docs.ogc.org/is/20-010/20-010.html
+- OGC CityGML 3.0 Users Guide: https://docs.ogc.org/guides/20-066.html
+- Cesium 3D Tiles API: https://cesium.com/learn/cesiumjs/ref-doc/Cesium3DTileset.html
+
+이 문서의 구현 상태는 2026-09-11 작업 기준입니다. 실제 모델의 촬영·갱신 시점은 아직 확인하지 못했습니다.
