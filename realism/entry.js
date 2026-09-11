@@ -153,6 +153,27 @@ class WorldRenderer{
 root.JejuRender={WorldRenderer};
 })(globalThis);
 
+/* Artistic presentation pass, not additional geographic or photographic evidence. */
+(function(root){
+ const Base=root.JejuRender.WorldRenderer;
+ class CityRenderer extends Base{
+  makeMaterials(){
+   super.makeMaterials();
+   this.materials.ground.map=null;this.materials.ground.color.set('#bbc0b7');this.materials.ground.roughness=1;
+   this.materials.roof.color.setRGB(1.7,1.75,1.7);
+   for(let i=0;i<4;i++)this.materials['facade'+i].color.setRGB(1.1,1.12,1.1);
+   this.materials.water.fragmentShader=this.materials.water.fragmentShader.replace('*.18+','*.022+').replace('*.09,1.','*.012,1.').replace('*.20+','*.028+').replace('*.06))','*.008))').replace('f*.75','f*.4');
+  }
+  setLighting(preset){
+   super.setLighting(preset);this.hemisphere.groundColor.set('#bdc5b4');
+   if(preset==='day'){this.hemisphere.intensity=3.0;this.sun.intensity=3.8;this.renderer.toneMappingExposure=1.3;}
+   else if(preset==='golden'){this.hemisphere.intensity=2.0;this.sun.intensity=4.0;this.renderer.toneMappingExposure=1.28;}
+   else{this.hemisphere.intensity=1.3;this.renderer.toneMappingExposure=1.0;}
+  }
+ }
+ root.JejuRender.WorldRenderer=CityRenderer;
+})(globalThis);
+
 /* JEJU BEFORE · application and accessible interface */
 (function(){
 'use strict';
@@ -231,7 +252,7 @@ function positionPins(){const r=state.renderer;if(!r)return;const max=innerWidth
 function drawMinimap(){const canvas=$('#minimap'),ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;const min=geo(C.bounds[0],C.bounds[3]),max=geo(C.bounds[2],C.bounds[1]);const scale=Math.min((w-16)/(max[0]-min[0]),(h-14)/(max[1]-min[1]));const to=p=>[8+(p[0]-min[0])*scale,7+(p[1]-min[1])*scale];ctx.fillStyle='#22474c';ctx.fillRect(0,0,w,h);ctx.fillStyle='#577567';const coast=(map.coast||[]).map(c=>to(geo(...c)));if(coast.length){ctx.beginPath();coast.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.lineTo(...to([max[0],max[1]]));ctx.lineTo(...to([min[0],max[1]]));ctx.closePath();ctx.fill();}else{ctx.fillStyle='#45675e';ctx.fillRect(0,40,w,h);}ctx.strokeStyle='#92ab8f';ctx.lineWidth=.6;ctx.beginPath();for(const r of map.roads){if(!r.coords?.length)continue;const first=to(geo(...r.coords[0]));ctx.moveTo(...first);for(const c of r.coords.slice(1))ctx.lineTo(...to(geo(...c)));}ctx.stroke();if(state.route){ctx.strokeStyle='#d7f58a';ctx.lineWidth=1.5;ctx.beginPath();state.route.points.forEach((p,i)=>i?ctx.lineTo(...to(p)):ctx.moveTo(...to(p)));ctx.stroke();}for(const p of places){if(!['attraction','transport'].includes(p.category))continue;let q=to(geo(p.lon,p.lat));ctx.fillStyle=p.category==='transport'?'#ded9e4':'#cee3b0';ctx.beginPath();ctx.arc(...q,p.category==='transport'?2.1:1.15,0,Math.PI*2);ctx.fill();}let p=to(player.pos);ctx.fillStyle='#f4b278';ctx.strokeStyle='#173c31';ctx.lineWidth=1.3;ctx.beginPath();ctx.arc(...p,3,0,6.3);ctx.fill();ctx.stroke();ctx.font='9px sans-serif';ctx.fillStyle='#cee5cb';ctx.fillText('N',w-16,14);ctx.font='8px sans-serif';let air=to(geo(126.4936,33.5062));ctx.fillText('CJU',air[0]-7,air[1]-6);}
 function loop(now){if(state.destroyed)return;requestAnimationFrame(loop);if(document.hidden){state.lastFrame=now;return;}if(!state.lastFrame){state.lastFrame=now;return;}const dt=Math.min((now-state.lastFrame)/1000,.08);if(dt<1/35)return;state.lastFrame=now;let moving=updateMotion(dt);state.renderer?.draw(player,state.phase,moving);positionPins();if(state.metrics.frames++%6===0){drawMinimap();const n=nearestPlace();const show=state.mode==='walk'&&!state.auto&&!state.selected&&!$('dialog[open]')&&n?.d<65;$('#nearby-prompt').hidden=!show;if(show)$('#nearby-prompt>span').textContent=n.p.name;}}
 async function serverStatus(){state.naverConfigured=false;}
-function init(){try{state.graph=new C.RoadGraph(map.roads,{splitCrossings:map.mode==='schematic'});let near=state.graph.nearest(player.pos,250);if(near){player.pos=near.point;state.edge=near.edge;}state.renderer=new JejuRender.WorldRenderer(canvas,map,places,state.graph);state.renderer.focus(geo(126.5256,33.5132),innerWidth<680?1200:1050);state.renderer.yaw=.32;state.renderer.pitch=.91;state.renderer.onLost=()=>{toast('그래픽 연결이 중단되었습니다. 복구를 기다리거나 새로고침해 주세요.');};if(map.mode==='osm'){$('#data-status span').textContent='실제 윤곽 · 외관 연출';$('#data-status i').style.backgroundColor='#d7f58a';$('#data-footer').textContent='OSM 윤곽 · 외관·높이·보행 조건 미검증';$('#osm-credit').hidden=false;$('.minimap-foot span:last-child').textContent='OSM';}else{$('#data-footer').textContent='공간·위치 초안 · 실제 길찾기 아님';}state.renderer.draw(player,0,false);drawMinimap();$('#loading').hidden=true;requestAnimationFrame(loop);}catch(e){$('#loading').hidden=true;$('#fatal').hidden=false;$('#fatal p').textContent=e.message||'3D 초기화 오류';console.error('3D initialization failed',e);}}
+function init(){try{state.graph=new C.RoadGraph(map.roads,{splitCrossings:map.mode==='schematic'});let near=state.graph.nearest(player.pos,250);if(near){player.pos=near.point;state.edge=near.edge;}state.renderer=new JejuRender.WorldRenderer(canvas,map,places,state.graph);state.renderer.focus(geo(126.5256,33.5132),innerWidth<680?980:850);state.renderer.yaw=.32;state.renderer.pitch=.65;state.renderer.onLost=()=>{toast('그래픽 연결이 중단되었습니다. 복구를 기다리거나 새로고침해 주세요.');};if(map.mode==='osm'){$('#data-status span').textContent='실제 윤곽 · 외관 연출';$('#data-status i').style.backgroundColor='#d7f58a';$('#data-footer').textContent='OSM 윤곽 · 외관·높이·보행 조건 미검증';$('#osm-credit').hidden=false;$('.minimap-foot span:last-child').textContent='OSM';}else{$('#data-footer').textContent='공간·위치 초안 · 실제 길찾기 아님';}state.renderer.draw(player,0,false);drawMinimap();$('#loading').hidden=true;requestAnimationFrame(loop);}catch(e){$('#loading').hidden=true;$('#fatal').hidden=false;$('#fatal p').textContent=e.message||'3D 초기화 오류';console.error('3D initialization failed',e);}}
 
 $('#export-map').addEventListener('click',()=>downloadJSON(map,map.mode==='osm'?'map-osm.json':'map-seed.export.json'));
 let osmLoading=false,osmLastAttempt=0;
