@@ -1,0 +1,42 @@
+name: Publish JEJU BEFORE beta
+on:
+  push:
+    branches: [jeju-before-web]
+    paths:
+      - .github/workflows/jeju-before-publish.yml
+      - deploy/relay.mjs
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: jeju-before-first-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Receive encrypted one-time capability and deploy only JEJU BEFORE
+        run: node deploy/relay.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JEJU_SITE_ID: 16396ec7-5ee7-408d-84ce-8c7d93d866a9
+      - name: Install browser test runner
+        run: npm install --prefix "$RUNNER_TEMP/jeju-browser-check" --no-package-lock playwright@1.55.0
+      - name: Test public site in desktop and mobile browsers
+        run: node deploy/smoke.cjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PLAYWRIGHT_ROOT: ${{ runner.temp }}/jeju-browser-check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jeju-before-public-browser-results
+          path: public-qa/
+          if-no-files-found: ignore

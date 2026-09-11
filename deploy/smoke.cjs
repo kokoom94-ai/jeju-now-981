@@ -1,0 +1,54 @@
+const fs=require('node:fs');const path=require('node:path');
+const {chromium}=require(path.join(process.env.PLAYWRIGHT_ROOT,'node_modules/playwright'));
+const url='https://jeju-before-walk.netlify.app/';
+const checks=[],errors=[];fs.mkdirSync('public-qa',{recursive:true});
+const record=(name,ok,details)=>{checks.push({name,passed:!!ok,...(details?{details}:{})});if(!ok)throw new Error(name);};
+const state=p=>p.evaluate('window.__JEJU_DEBUG__.state');
+async function pageFor(browser,width,height,mobile=false){const context=await browser.newContext({viewport:{width,height},isMobile:mobile,hasTouch:mobile});const page=await context.newPage();page.on('pageerror',e=>errors.push(String(e)));const response=await page.goto(url,{waitUntil:'domcontentloaded'});record(`${mobile?'Mobile':'Desktop'} HTTPS responds 200`,response.status()===200);await page.waitForFunction('window.__JEJU_DEBUG__?.state.frames>3',{},{timeout:30000});return {page,context};}
+(async()=>{
+ let browser,failed=null;
+ try{
+  const exe=['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium'].find(p=>fs.existsSync(p));
+  browser=await chromium.launch({...(exe?{executablePath:exe}:{}),headless:true,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+  let {page:p,context}=await pageFor(browser,1440,1000);
+  record('Actual public origin, no storage test doubles',await p.evaluate("location.origin==='https://jeju-before-walk.netlify.app' && typeof window.__storageMock==='undefined'"));
+  record('WebGL renders and 32 places load',(await state(p)).frames>3&&(await state(p)).places===32);
+  record('Schematic limitations remain visible',(await state(p)).mapMode==='schematic'&&(await p.locator('#data-status').innerText()).includes('초안'));
+  await p.screenshot({path:'public-qa/desktop.png'});
+  await p.locator('#filters [data-category=hotel]').click();record('Seven hotel cards',await p.locator('.place-card').count()===7);
+  await p.locator('#search').fill('휘슬락');record('Search finds one hotel',await p.locator('.place-card').count()===1);
+  await p.locator('.place-title').click();record('Place information popup opens',await p.locator('#detail').isVisible());
+  record('Naver link uses official map search',(await p.locator('.naver-link').getAttribute('href')).startsWith('https://map.naver.com/p/search/'));
+  await p.screenshot({path:'public-qa/place-popup.png'});
+  await p.locator('#detail-save').click();record('Itinerary saves a place',(await state(p)).saved.includes('whistle'));
+  await p.locator('.detail-close').click();await p.locator('#search').fill('');await p.locator('#filters [data-category=all]').click();
+  await p.locator('#avatar-open').click();await p.locator('#character-name').fill('공개 배포 테스트');await p.locator('#swatches button').nth(2).click();await p.locator('#avatar-save').click();
+  record('Avatar customization',await p.locator('#avatar-name-label').innerText().then(t=>t.includes('공개 배포 테스트')));
+  await p.reload({waitUntil:'domcontentloaded'});await p.waitForFunction('window.__JEJU_DEBUG__?.state.frames>3');
+  record('Character persists in real HTTPS localStorage',(await p.locator('#avatar-name-label').innerText()).includes('공개 배포 테스트'));
+  record('Itinerary persists after actual reload',(await state(p)).saved.includes('whistle'));
+  await p.locator('#walk-mode').click();await p.waitForTimeout(300);const start=(await state(p)).position;await p.keyboard.down('KeyD');await p.waitForTimeout(1400);await p.keyboard.up('KeyD');const end=(await state(p)).position;
+  record('Keyboard moves avatar',start.reduce((a,v,i)=>a+Math.abs(v-end[i]),0)>.15);
+  await p.screenshot({path:'public-qa/walk.png'});
+  await p.locator('.topnav [data-tab=tours]').click();record('Three walking tours available',await p.locator('.tour-card').count()===3);
+  await p.locator('.tour-card button').first().click();await p.waitForTimeout(600);const dist=(await state(p)).distance;await p.waitForTimeout(900);record('Automatic walk progresses',(await state(p)).auto&&(await state(p)).distance>dist);
+  await p.keyboard.press('ArrowRight');record('Manual input stops automatic walk',!(await state(p)).auto);
+  await context.close();
+  ({page:p,context}=await pageFor(browser,390,844,true));
+  record('Mobile has no horizontal overflow',await p.evaluate('document.documentElement.scrollWidth<=innerWidth'));
+  await p.screenshot({path:'public-qa/mobile.png'});
+  await p.locator('#mobile-places').click();await p.locator('#search').fill('관덕정');await p.locator('.place-title').first().click();record('Mobile place popup opens',await p.locator('#detail').isVisible());
+  await p.locator('#start-here').click();record('Mobile walking mode starts',(await state(p)).mode==='walk');
+  const b=await p.locator('#joystick').boundingBox(),mstart=(await state(p)).position;await p.mouse.move(b.x+b.width/2+20,b.y+b.height/2);await p.mouse.down();await p.waitForTimeout(1300);await p.mouse.up();const mend=(await state(p)).position;
+  record('Mobile joystick moves avatar',mstart.reduce((a,v,i)=>a+Math.abs(v-mend[i]),0)>.1);
+  await p.screenshot({path:'public-qa/mobile-walk.png'});await context.close();record('No browser runtime errors',errors.length===0,errors);
+ }catch(e){failed=String(e);console.error(failed);}finally{if(browser)await browser.close();}
+ const result={url,testedAt:new Date().toISOString(),runId:process.env.GITHUB_RUN_ID,ok:!failed&&checks.every(c=>c.passed),passed:checks.filter(c=>c.passed).length,checks,errors,failure:failed,notes:'Live HTTPS desktop/mobile Chromium tests. No storage mocks; no claim of actual OSM or Naver API integration.'};
+ fs.writeFileSync('public-qa/results.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));
+ const base=`https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}/contents/deploy/browser-result.json`,branch=process.env.GITHUB_REF_NAME;
+ const headers={Authorization:`Bearer ${process.env.GH_TOKEN}`,Accept:'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'};
+ const old=await fetch(base+'?ref='+encodeURIComponent(branch),{headers});let sha;if(old.ok)sha=(await old.json()).sha;
+ const write=await fetch(base,{method:'PUT',headers,body:JSON.stringify({message:'Record JEJU BEFORE public browser verification',branch,content:Buffer.from(JSON.stringify(result,null,2)+'\n').toString('base64'),...(sha?{sha}:{})})});
+ if(!write.ok)throw new Error('Failed to store browser verification: '+write.status);
+ if(!result.ok)process.exitCode=1;
+})().catch(e=>{console.error(String(e));process.exitCode=1;});
