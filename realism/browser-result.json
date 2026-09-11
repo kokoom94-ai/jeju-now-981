@@ -1,9 +1,9 @@
 {
-  "url": "https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/9e204f102de01561a7d7ffb193a5011a5f92adbc/real.html",
-  "testedAt": "2026-09-11T12:46:21.766Z",
-  "runId": "34600435604",
-  "ok": false,
-  "passed": 17,
+  "url": "https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/aa07577ecc30bed2a51c383fc153431894643e56/real.html",
+  "testedAt": "2026-09-11T12:55:42.328Z",
+  "runId": "34601165970",
+  "ok": true,
+  "passed": 30,
   "checks": [
     {
       "name": "Desktop HTTPS page responds 200",
@@ -26,9 +26,9 @@
         "coast": "OSM",
         "photoTexturesLoaded": 6,
         "photoTextureErrors": [],
-        "frames": 4,
-        "drawCalls": 235,
-        "triangles": 1161665,
+        "frames": 5,
+        "drawCalls": 217,
+        "triangles": 1159502,
         "preset": "day",
         "shadows": true,
         "quality": "high",
@@ -102,17 +102,81 @@
     },
     {
       "name": "Keyboard moves character along the real-road graph",
-      "passed": false
+      "passed": true,
+      "details": {
+        "before": [
+          -412.70910082886627,
+          -136.14605407340179
+        ],
+        "after": [
+          -412.551696087224,
+          -136.12645683613377
+        ]
+      }
+    },
+    {
+      "name": "Three theme walk definitions retained",
+      "passed": true
+    },
+    {
+      "name": "At least one curated walk routes on actual OSM graph",
+      "passed": true
+    },
+    {
+      "name": "Automatic route progresses",
+      "passed": true
+    },
+    {
+      "name": "Manual input interrupts automatic walk",
+      "passed": true
+    },
+    {
+      "name": "Mobile HTTPS page responds 200",
+      "passed": true
+    },
+    {
+      "name": "Mobile uses light default quality",
+      "passed": true
+    },
+    {
+      "name": "Mobile no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Mobile place popup",
+      "passed": true
+    },
+    {
+      "name": "Mobile walking mode starts",
+      "passed": true
+    },
+    {
+      "name": "Mobile joystick moves avatar",
+      "passed": true,
+      "details": {
+        "before": [
+          -413.39150232846976,
+          -136.2310145641739
+        ],
+        "after": [
+          -413.2152082513345,
+          -136.20906556300326
+        ]
+      }
+    },
+    {
+      "name": "Mobile lighting control remains usable",
+      "passed": true
+    },
+    {
+      "name": "No JavaScript or WebGL shader errors",
+      "passed": true,
+      "details": []
     }
   ],
   "errors": [],
-  "failedRequests": [
-    {
-      "url": "https://server.ethicalads.io/proxy/viewtime/10792/01a0907f-72fe-7a72-bb2b-26d77d5e60a7/?view_time=1",
-      "error": "net::ERR_ABORTED"
-    }
-  ],
-  "failure": "Error: Keyboard moves character along the real-road graph",
+  "failedRequests": [],
+  "failure": null,
   "desktopStatus": {
     "version": "2.0.0-realism-beta",
     "renderer": "Three.js r180 / PBR",
@@ -123,9 +187,9 @@
     "coast": "OSM",
     "photoTexturesLoaded": 6,
     "photoTextureErrors": [],
-    "frames": 4,
-    "drawCalls": 235,
-    "triangles": 1161665,
+    "frames": 5,
+    "drawCalls": 217,
+    "triangles": 1159502,
     "preset": "day",
     "shadows": true,
     "quality": "high",
@@ -140,5 +204,32 @@
     ],
     "trees": 3200
   },
-  "scope": "Real HTTPS origin in desktop/mobile-sized Chromium with software WebGL2. Not a real-device benchmark, surveying, Naver validation, or street photography."
+  "mobileStatus": {
+    "version": "2.0.0-realism-beta",
+    "renderer": "Three.js r180 / PBR",
+    "mapMode": "osm",
+    "roads": 7562,
+    "buildings": 10617,
+    "sourceBuildings": 10617,
+    "coast": "OSM",
+    "photoTexturesLoaded": 6,
+    "photoTextureErrors": [],
+    "frames": 5,
+    "drawCalls": 133,
+    "triangles": 1057137,
+    "preset": "day",
+    "shadows": false,
+    "quality": "light",
+    "streetViewPhotography": false,
+    "satelliteImagery": false,
+    "facadesSurveyed": false,
+    "positions": [
+      126.462,
+      33.468,
+      126.575,
+      33.536
+    ],
+    "trees": 3200
+  },
+  "scope": "Real HTTPS origin in desktop/mobile-sized Chromium with software WebGL2. Movement assertions wait for frames; not a real-device benchmark, surveying, Naver validation, or street photography."
 }

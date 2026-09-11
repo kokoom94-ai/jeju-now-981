@@ -1,8 +1,8 @@
 {
   "version": "2.0.0-realism-beta",
-  "url": "https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/9e204f102de01561a7d7ffb193a5011a5f92adbc/real.html",
-  "commit": "9e204f102de01561a7d7ffb193a5011a5f92adbc",
-  "publishedAt": "2026-09-11T12:44:02.914Z",
+  "url": "https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/aa07577ecc30bed2a51c383fc153431894643e56/real.html",
+  "commit": "aa07577ecc30bed2a51c383fc153431894643e56",
+  "publishedAt": "2026-09-11T12:52:20.944Z",
   "httpVerified": true,
   "htmlSha256": "9a214676411bf76e7c3b542e2ff310d0b3c0b9b2c7526baef134f4533e8f05c5",
   "htmlBytes": 50963,
@@ -12,5 +12,5 @@
   "facadesSurveyed": false,
   "mainBranchModified": false,
   "host": "GitHub + rawcdn.githack.com",
-  "runId": "34600435604"
+  "runId": "34601165970"
 }
