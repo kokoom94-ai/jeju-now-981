@@ -1,0 +1,62 @@
+name: Verify live signals 2.2
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'server-v22.mjs'
+      - 'lib/source-data.mjs'
+      - 'tools/build-v22.mjs'
+      - 'assets/signals.*'
+      - 'observe.html'
+      - 'package.json'
+      - 'tests/live-data.test.mjs'
+      - '.github/workflows/verify-live-signals.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test backend and build map integration
+        run: npm test
+      - name: Read deployment and external source status
+        run: |
+          python3 - <<'PY'
+          import json,time,urllib.request,hashlib,pathlib
+          from datetime import datetime,timezone
+          ROOT='https://jeju-now-981.onrender.com'
+          expected='live-signals-2.2.0'
+          def get(path):
+            req=urllib.request.Request(ROOT+path,headers={'User-Agent':'JejuNow981-DeploymentVerification/2.2','Cache-Control':'no-cache'})
+            with urllib.request.urlopen(req,timeout=20) as r:return r.read(2000000)
+          result={'checkedAt':datetime.now(timezone.utc).isoformat(),'expectedVersion':expected,'deploymentVerified':False,'productionWrites':0}
+          for attempt in range(12):
+            try:
+              health=json.loads(get('/health'))
+              if health.get('version')!=expected:raise ValueError('deployment has not updated yet')
+              hashes={}
+              for route,file in [('/','index-v22.html'),('/assets/village-v22.js','assets/village-v22.js'),('/assets/signals.js','assets/signals.js'),('/assets/signals.css','assets/signals.css')]:
+                got=hashlib.sha256(get(route)).hexdigest();want=hashlib.sha256(pathlib.Path(file).read_bytes()).hexdigest()
+                hashes[route]={'match':got==want,'sha256':got}
+                if got!=want:raise ValueError('deployed file mismatch: '+route)
+              live=json.loads(get('/api/v1/parks/981/live'));signals=json.loads(get('/api/v1/parks/981/signals'))
+              if signals.get('weather',{}).get('state')=='connecting':time.sleep(15);signals=json.loads(get('/api/v1/parks/981/signals'))
+              result.update(deploymentVerified=True,health=health,hashes=hashes,live={'mode':live.get('mode'),'people':live.get('people'),'accuracy':live.get('accuracy')},signals=signals)
+              break
+            except Exception as e:
+              result['lastAttemptError']=str(e)[:200];print('ATTEMPT',attempt+1,str(e)[:200]);time.sleep(12)
+          result['checkedAt']=datetime.now(timezone.utc).isoformat()
+          pathlib.Path('deployment-v22.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+          print('DEPLOYMENT_RESULT',json.dumps(result,ensure_ascii=False))
+          if not result['deploymentVerified']:raise SystemExit(1)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-signals-deployment
+          path: deployment-v22.json

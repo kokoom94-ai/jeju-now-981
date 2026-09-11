@@ -1,10 +1,12 @@
 {
   "name": "jeju-now-981",
-  "version": "1.0.0",
+  "version": "2.2.0",
   "private": true,
   "type": "module",
-  "engines": {"node": ">=20"},
+  "engines": { "node": ">=22 <23" },
   "scripts": {
-    "start": "node server.mjs"
+    "build": "node tools/build-v22.mjs",
+    "start": "node tools/build-v22.mjs && node server-v22.mjs",
+    "test": "node tools/build-v22.mjs && node --test tests/*.test.mjs"
   }
 }
