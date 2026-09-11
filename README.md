@@ -1,9 +1,55 @@
-# JEJU BEFORE — public beta
+# JEJU:BEFORE 2.0 — 실제 도시 윤곽 기반 3D 여행지도
 
-[Open the 3D walking map](https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/7e6e839b847fcf98d1069a89ae2ec70ccdbc9417/index.html)
+## 공개 실행 주소
 
-The app is published as a static beta via GitHub + a third-party CDN. Netlify deployment was blocked by exhausted account credits; no payment or billing settings were changed. A first-visit confirmation may appear before the HTML opens.
+[배경 고도화 2.0 실행하기](https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/aa07577ecc30bed2a51c383fc153431894643e56/real.html)
 
-**This is a schematic spatial draft, not a verified map of real streets or Naver places.** It contains 32 draft places, third-person walking, clickable place information and browser-local itinerary/avatar settings. No API credentials are included. Do not enter sensitive data in this preview.
+GitHub + rawcdn.githack.com에서 제공하는 공개 베타입니다. 처음 접속할 때 외부 CDN의 페이지 열기 확인 화면이 나타날 수 있습니다. 민감한 정보를 입력하지 마세요. 기존 9.81 운영 코드가 있는 main 브랜치는 변경하지 않았습니다.
 
-This isolated branch does not modify the repository's main branch or the existing 9.81 service. The readable standalone source is index.html. Machine-readable publication and browser test results are under deploy/.
+## 이번에 반영한 내용
+
+- 실제 OpenStreetMap 도로 객체 7,562개, 건물 윤곽 10,617개, OSM 해안선 적용. 기존의 임의 생성 도시와 구분합니다.
+- Three.js r180 기반 물리 기반 재질, 햇빛과 그림자, 외벽·창문 시각화, 바다 반사·잔물결, 수목 표현.
+- Poly Haven CC0 아스팔트·콘크리트·포장면 표면 스캔 3종, 색상·노멀맵 총 6개를 자체 제공. 제주 현장의 사진이 아니라 일반 표면 재질입니다.
+- 낮·노을·블루아워 조명 프리셋, 고화질/가벼운 모드, PC 화면 몰입 모드. 모바일은 그림자를 끈 가벼운 모드로 시작합니다.
+- 기존 32개 장소, 장소 팝업·네이버 지도 검색 링크, 캐릭터 설정, 도보 조작, 여정 저장 유지.
+
+## 정확성과 한계
+
+실제 거리뷰·위성영상·사진측량 3D가 연결된 실사 복제본이 아닙니다. 창문, 외벽 구성, 옥상 장치, 차선 표현, 수목 크기와 일부 배치는 시각화입니다. 조명 프리셋은 실시간 날씨가 아닙니다.
+
+건물 10개는 OSM 높이 태그, 663개는 층수 × 가정 3m, 9,944개는 가정 높이 9m를 사용합니다. 지형은 평면이며 실제 경사, 계단, 건물 내부, 보도·횡단보도 안전성을 재현하지 않습니다.
+
+표시 범위는 경도 126.462~126.575, 위도 33.468~33.536의 사각형입니다. 요청 지역과 공항 일대를 대상으로 하며 행정동 경계의 완전 포함은 검증 전입니다. 공항 활주로·계류장은 보행 경로에서 제외합니다.
+
+기본 장소의 좌표·출입구·운영정보와 네이버 장소 검증은 여전히 미완료입니다. 기본 목록은 전수 목록이 아닙니다. 네이버 버튼은 공식 지도 검색 링크이며, 네이버 API 인증정보를 연결한 상태가 아닙니다.
+
+자동 산책은 OSM 보행 태그와 공유 노드에 따른 가상 경로입니다. 연결되지 않은 도로를 직선으로 메우지 않습니다. 일부 코스·지점은 도로 연결 정보 부족으로 경로 생성이 실패할 수 있습니다. 이 스냅샷에서는 오현단에 연결되는 예시 역사 코스의 일부 연결을 찾지 못했습니다. 안전한 현장 길 안내로 사용하지 마세요.
+
+캐릭터·내 장소·여정은 같은 브라우저 저장소에만 보관됩니다. 공유 CMS, 계정, 공용 데이터베이스는 없습니다.
+
+## 검증
+
+공개 HTTPS 주소에서 PC·모바일 화면 크기의 Chromium으로 30개 검사를 통과했습니다. 실제 도로·건물 렌더링, 6개 사진 재질 수신, 조명 변경, 그림자 모드, 장소 검색·팝업, 키보드·조이스틱 이동, 실제 브라우저 저장소 유지, 자동 산책 진행 등을 확인했습니다.
+
+이 검사는 소프트웨어 WebGL2 렌더러를 사용한 기능 검사입니다. 실제 iPhone/Android 기기 성능, FPS, 배터리 사용량이나 현장 지도 정확도를 인증하지 않습니다. 이동 검사는 고정 시간의 속도 측정이 아니라 렌더링된 위치 변화를 기다려 확인합니다.
+
+- [공개 배포 기록](realism/publication.json)
+- [공개 브라우저 검사 결과](realism/browser-result.json)
+- [공간·사진 재질 수신 기록](realism/acquisition.json)
+- [데이터·재질 라이선스](realism/LICENSES.txt)
+- [OSM 파생 데이터](realism/world-v2.json)
+- [성공한 검증 워크플로](https://github.com/kokoom94-ai/jeju-now-981/actions/runs/34601165970)
+
+## 소스와 빌드
+
+`realism/renderer.js`: 3D 장면, 재질, 그림자, 카메라, 캐릭터.
+`realism/presentation.js`: 연출용 색조·조명 마감.
+`realism/build.mjs`: 기존 index.html의 UI·이동 로직과 실제 스냅샷으로 real.html 및 realism/entry.js 생성.
+`realism/verify.cjs`: 공개 주소 브라우저 검사.
+
+Node.js 22에서 `node realism/build.mjs`로 빌드합니다. 실제 공간 원본과 성공한 재질 수신 기록이 없으면 빌드를 중단합니다. 정적 서버에서 `real.html`과 `realism/` 디렉터리를 함께 제공해야 합니다. 표시되는 것은 수신 시점의 스냅샷이며 자동 최신 갱신을 주장하지 않습니다.
+
+기존 `index.html`은 최초 공간 초안을 비교용으로 보존합니다.
+
+출처: © OpenStreetMap contributors (ODbL 1.0), Poly Haven (CC0 1.0), Three.js (MIT). 세부 기록과 라이선스는 위 파일에 포함되어 있습니다.
