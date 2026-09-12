@@ -12,10 +12,10 @@ if(previous){
  if(!marker||JSON.parse(Buffer.from(marker.content,'base64').toString('utf8')).app!=='JEJU:BEFORE precision')throw Error('Existing branch is not an owned precision build; refusing to replace it');
  baseTree=(await api('/git/commits/'+previous.object.sha)).tree.sha;
 }
-const names=['.nojekyll','index.html','app.mjs','bridge.mjs','session.mjs','places.json','site.json','README.md'];
+const names=['.nojekyll','index.html','app.mjs','bridge.mjs','session.mjs','connection.mjs','CONNECT_3_2.md','places.json','site.json','README.md'];
 const tree=[];for(const name of names)tree.push({path:name,mode:'100644',type:'blob',content:await fs.readFile('_precision_site/'+name,'utf8')});
 const created=await api('/git/trees','POST',{...(baseTree?{base_tree:baseTree}:{}),tree});
-const commit=await api('/git/commits','POST',{message:'Publish precision connection gate; no key or Jeju model included',tree:created.sha,parents:previous?[previous.object.sha]:[]});
+const commit=await api('/git/commits','POST',{message:'Stage precision 3.2 proxy-capable connection gate; no key or model included',tree:created.sha,parents:previous?[previous.object.sha]:[]});
 if(previous)await api('/git/refs/heads/'+SITE_BRANCH,'PATCH',{sha:commit.sha,force:false});
 else await api('/git/refs','POST',{ref:'refs/heads/'+SITE_BRANCH,sha:commit.sha});
 const url='https://rawcdn.githack.com/'+repo+'/'+commit.sha+'/index.html';
@@ -32,8 +32,8 @@ if(mainAfter!==mainBefore)throw Error('Main changed concurrently; inspect before
 const publication={version:VERSION,url,siteBranch:SITE_BRANCH,commit:commit.sha,sourceBranch:'jeju-before-web',sourceCommit:process.env.GITHUB_SHA,
  publishedAt:new Date().toISOString(),runId:process.env.GITHUB_RUN_ID,publicPreviewVerified:true,publicPreviewKeyEntryEnabled:false,htmlCheck:check,
  plannedDedicatedUrl:PLANNED_URL,pagesEnabled:meta.has_pages===true,pagesSettingChanged:false,pagesActionRequired:meta.has_pages!==true,
- providerConfigured:false,sdkLiveTested:false,jejuPrecisionModelsReceived:false,productionReady:false,
+ userReportedKeyIssued:true,providerConfigured:false,proxyDeploymentVerified:false,sdkLiveTested:false,jejuPrecisionModelsReceived:false,productionReady:false,
  mainBranchModified:false,mainShaBefore:mainBefore,mainShaAfter:mainAfter,existingWalkingFilesModified:false,
- note:'Published connection/inspection UI only. Enabling Pages and obtaining a user-owned VWorld key remain prerequisites; no actual building accuracy claim.'};
+ note:'Connection UI and proxy source prepared. User key already issued but not supplied to runtime. Check readiness.json for actual Pages HTTP/file state; staging a branch is not live provider validation.'};
 await fs.writeFile('precision/publication.json',JSON.stringify(publication,null,2));
 console.log(JSON.stringify(publication,null,2));

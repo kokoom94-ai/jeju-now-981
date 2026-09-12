@@ -1,0 +1,21 @@
+# Create a NEW service only. Do not attach this Blueprint to the existing 9.81 service.
+# This file does not deploy anything by itself. Review free limits before creating.
+services:
+  - type: web
+    name: jeju-precision-proxy
+    runtime: node
+    plan: free
+    region: singapore
+    repo: https://github.com/kokoom94-ai/jeju-now-981
+    branch: jeju-before-web
+    autoDeployTrigger: off
+    buildCommand: node --test precision/proxy.test.mjs
+    startCommand: node precision/proxy-server.mjs
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: VWORLD_SERVICE_URL
+        value: https://kokoom94-ai.github.io/jeju-now-981/
+      - key: VWORLD_API_KEY
+        sync: false

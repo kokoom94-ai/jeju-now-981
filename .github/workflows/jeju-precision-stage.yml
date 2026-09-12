@@ -3,13 +3,7 @@ on:
   push:
     branches: [jeju-before-web]
     paths:
-      - precision/app.mjs
-      - precision/index.html
-      - precision/session.mjs
-      - precision/session.test.mjs
-      - precision/prepare.mjs
-      - precision/publish.mjs
-      - precision/verify.cjs
+      - 'precision/**'
       - .github/workflows/jeju-precision-stage.yml
   workflow_dispatch:
 permissions:
@@ -27,15 +21,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Prepare isolated static bundle
+      - name: Prepare isolated static bundle without mutating source
         run: node precision/prepare.mjs
-      - name: Run unit and safety contract tests
+      - name: Run unit, proxy transport and safety contract tests
         run: |
           set -o pipefail
           mkdir -p precision-qa
-          node --test precision/contract.test.mjs precision/session.test.mjs | tee precision-qa/unit-tests.txt
+          node --test precision/*.test.mjs | tee precision-qa/unit-tests.txt
       - name: Stage Pages branch and publish key-disabled preview
         run: node precision/publish.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Inspect actual dedicated site and protected branch without changing settings
+        if: always()
+        run: node precision/readiness.mjs
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Install browser test runner
@@ -44,17 +43,20 @@ jobs:
         run: node precision/verify.cjs
         env:
           PLAYWRIGHT_ROOT: ${{ runner.temp }}/precision-browser
+      - name: Verify real keyless proxy preflight and browser cancellation
+        run: node precision/proxy-verify.cjs
+        env:
+          PLAYWRIGHT_ROOT: ${{ runner.temp }}/precision-browser
       - name: Record exact publication and verification on isolated source branch
         if: always()
         run: |
           git config user.name 'JEJU BEFORE build'
           git config user.email 'jeju-before-build@users.noreply.github.com'
-          git add precision/bridge.mjs
-          for f in precision/publication.json precision/browser-result.json; do
+          for f in precision/publication.json precision/browser-result.json precision/readiness.json precision/proxy-browser-result.json; do
             if test -f "$f"; then git add "$f"; fi
           done
           if ! git diff --cached --quiet; then
-            git commit -m 'Record precision gate publication and no-key browser checks [skip ci]'
+            git commit -m 'Record precision 3.2 checks and actual deployment blockers [skip ci]'
             git pull --rebase origin jeju-before-web
             git push origin HEAD:jeju-before-web
           fi
@@ -65,5 +67,6 @@ jobs:
           path: |
             precision-qa/
             _precision_site/
+            precision/
           retention-days: 14
           include-hidden-files: true
