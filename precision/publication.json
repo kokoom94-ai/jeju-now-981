@@ -1,12 +1,12 @@
 {
   "version": "3.2.0-proxy-bootstrap",
-  "url": "https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/ee3936f3765cc612aaa9132d1371c3c11ade89fd/index.html",
+  "url": "https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/1d7da70a6e8df70e7f3fa69b898d1fe73ca9d0e2/index.html",
   "siteBranch": "jeju-precision-site",
-  "commit": "ee3936f3765cc612aaa9132d1371c3c11ade89fd",
+  "commit": "1d7da70a6e8df70e7f3fa69b898d1fe73ca9d0e2",
   "sourceBranch": "jeju-before-web",
-  "sourceCommit": "35004a4a8a75921a1e95f4cc486defbc21b1bbf9",
-  "publishedAt": "2026-09-12T01:29:08.156Z",
-  "runId": "34664947786",
+  "sourceCommit": "8ea4d1bd79c0ccb0632258e6899ffe345a2fa3eb",
+  "publishedAt": "2026-09-12T01:31:41.679Z",
+  "runId": "34665080407",
   "publicPreviewVerified": true,
   "publicPreviewKeyEntryEnabled": false,
   "htmlCheck": {

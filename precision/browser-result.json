@@ -1,7 +1,7 @@
 {
-  "url": "https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/ee3936f3765cc612aaa9132d1371c3c11ade89fd/index.html",
-  "testedAt": "2026-09-12T01:29:39.781Z",
-  "runId": "34664947786",
+  "url": "https://rawcdn.githack.com/kokoom94-ai/jeju-now-981/1d7da70a6e8df70e7f3fa69b898d1fe73ca9d0e2/index.html",
+  "testedAt": "2026-09-12T01:32:42.381Z",
+  "runId": "34665080407",
   "ok": true,
   "passed": 28,
   "checks": [
@@ -86,7 +86,7 @@
       "passed": true
     },
     {
-      "name": "Page returns HTTP 200: 127.0.0.1:42425",
+      "name": "Page returns HTTP 200: 127.0.0.1:33537",
       "passed": true
     },
     {
