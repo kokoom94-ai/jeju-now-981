@@ -1,11 +1,16 @@
 {
   "app": "JEJU:BEFORE precision",
-  "version": "3.1.0-connection-gate",
+  "version": "3.2.0-proxy-bootstrap",
   "sourceBranch": "jeju-before-web",
   "siteBranch": "jeju-precision-site",
   "places": 32,
   "generatedBuildingFallback": false,
   "providerConfigured": false,
   "productionReady": false,
-  "plannedDedicatedUrl": "https://kokoom94-ai.github.io/jeju-now-981/"
+  "plannedDedicatedUrl": "https://kokoom94-ai.github.io/jeju-now-981/",
+  "availableTransports": [
+    "direct-sdk",
+    "sdk-bootstrap-proxy"
+  ],
+  "proxyDeploymentVerified": false
 }

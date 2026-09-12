@@ -1,3 +1,4 @@
+import {proxySDK} from './connection.mjs';
 // Official VWorld WebGL 3.0 adapter. No built-in key, invented heights or meshes.
 // Primary reference: https://github.com/V-world/V-world_API_sample
 export const BOUNDS = Object.freeze([126.462,33.468,126.575,33.536]);
@@ -51,7 +52,7 @@ export function transition(state,event) {
 function childRuntime(channel,origin,places) {
   let viewer=null,started=false,ended=false,timer=null;
   const send=(type,payload={})=>parent.postMessage({channel,type,...payload},origin);
-  const fail=()=>{ended=true;clearInterval(timer);send('error',{message:'브이월드 초기화 실패. 인증키·등록 도메인·네트워크·WebGL 지원을 확인하세요.'});};
+  const fail=(code='SDK_INIT_FAILED')=>{ended=true;clearInterval(timer);send('error',{code,message:'브이월드 초기화 실패. 인증키·등록 도메인·네트워크·WebGL 지원을 확인하세요.'});};
   const ready=()=>{
     if(started||ended)return;
     viewer=window.ws3d?.viewer;
@@ -90,7 +91,7 @@ function childRuntime(channel,origin,places) {
           point:{pixelSize:9,color:C.Color.fromCssColorString(p.category==='hotel'?'#69b6ff':p.category==='parking'?'#f4ce73':'#69d8b5'),outlineColor:C.Color.BLACK,outlineWidth:1,heightReference:C.HeightReference.CLAMP_TO_GROUND},
           label:{text:p.name,font:'13px sans-serif',fillColor:C.Color.WHITE,showBackground:true,pixelOffset:new C.Cartesian2(0,-20),heightReference:C.HeightReference.CLAMP_TO_GROUND,distanceDisplayCondition:new C.DistanceDisplayCondition(0,2200)}});
       }
-      if(viewer.scene.renderError?.addEventListener)viewer.scene.renderError.addEventListener(()=>send('error',{message:'3D 렌더링 오류. 연결을 종료한 뒤 브라우저·기기를 확인하세요.'}));
+      if(viewer.scene.renderError?.addEventListener)viewer.scene.renderError.addEventListener(()=>send('error',{code:'RENDER_FAILED',message:'3D 렌더링 오류. 연결을 종료한 뒤 브라우저·기기를 확인하세요.'}));
       send('sdk-ready');
       addEventListener('message',e=>{
         if(e.source!==parent||e.origin!==origin||e.data?.channel!==channel)return;
@@ -104,20 +105,22 @@ function childRuntime(channel,origin,places) {
     } catch {fail();}
   };
   try {
-    if(!window.vw?.Map)throw Error('SDK missing');
+    if(window.__JEJU_SDK_FAILED__){fail('SDK_NETWORK_FAILED');return;}
+    if(!window.vw?.Map){fail('SDK_UNAVAILABLE');return;}
     window.vw.ws3dInitCallBack=ready;
     const map=new window.vw.Map();
     map.setOption({mapId:'vmap',initPosition:new window.vw.CameraPosition(new window.vw.CoordZ(126.525,33.508,1600),new window.vw.Direction(0,-50,0)),logo:true,navigation:true});
     map.start();
-    let count=0;timer=setInterval(()=>{ready();if(++count>120&&!started)fail();},250);ready();
+    let count=0;timer=setInterval(()=>{ready();if(++count>120&&!started)fail('SDK_INIT_TIMEOUT');},250);ready();
   } catch {fail();}
 }
-export function frameHTML({key,channel,origin,places=[]}) {
+export function frameHTML({key,sdkSource,channel,origin,places=[]}) {
   const u=new URL(origin);
   if(u.origin!==origin||(u.protocol!=='https:'&&!['localhost','127.0.0.1'].includes(u.hostname)))throw Error('HTTPS 서비스에서 연결해야 합니다.');
   if(!/^[a-zA-Z0-9-]{10,80}$/.test(channel))throw Error('Invalid session channel');
   const clean=places.map(cleanPlace).filter(Boolean);
   const js=JSON.stringify([channel,origin,clean]).replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
-  const src=sdkURL(key).replace(/&/g,'&amp;');
-  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="referrer" content="strict-origin-when-cross-origin"><style>html,body,#vmap{margin:0;width:100%;height:100%;overflow:hidden;background:#172327}</style><script src="${src}"></script></head><body><div id="vmap"></div><script>(${childRuntime.toString()})(...${js});</script></body></html>`;
+  if(key&&sdkSource)throw Error('Choose one SDK transport');
+  const src=(sdkSource?proxySDK(sdkSource,origin+'/'):sdkURL(key)).replace(/&/g,'&amp;');
+  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="referrer" content="strict-origin-when-cross-origin"><style>html,body,#vmap{margin:0;width:100%;height:100%;overflow:hidden;background:#172327}</style><script src="${src}" onerror="window.__JEJU_SDK_FAILED__=true"></script></head><body><div id="vmap"></div><script>(${childRuntime.toString()})(...${js});</script></body></html>`;
 }
