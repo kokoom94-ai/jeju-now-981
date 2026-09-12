@@ -37,6 +37,10 @@ jobs:
         run: node precision/readiness.mjs
         env:
           GH_TOKEN: ${{ github.token }}
+      - name: Install Korean fonts for representative browser snapshots
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --no-install-recommends -y fonts-noto-cjk
       - name: Install browser test runner
         run: npm install --prefix "$RUNNER_TEMP/precision-browser" --no-audit --no-fund playwright@1.55.0
       - name: Check public desktop and mobile preview plus local connection gate
