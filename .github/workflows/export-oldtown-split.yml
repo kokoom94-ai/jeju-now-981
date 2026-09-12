@@ -1,0 +1,49 @@
+name: Export oldtown source for repository separation
+on:
+  push:
+    branches: [jeju-before-web]
+    paths: [.github/workflows/export-oldtown-split.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  export:
+    if: github.repository == 'kokoom94-ai/jeju-now-981' && github.ref_name == 'jeju-before-web'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a0f7e23bf60bc5366131c9ddceda25c33ef55667
+          persist-credentials: false
+      - name: Export original application and assets without old credentials or deployment workflows
+        shell: python
+        run: |
+          from pathlib import Path
+          import zipfile, json
+          root = Path.cwd()
+          archive = root / 'oldtown-source.zip'
+          excluded = {'.git', '.github', '.deployment', 'deploy'}
+          names = []
+          with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(root.rglob('*')):
+                  rel = p.relative_to(root)
+                  if not p.is_file() or rel.parts[0] in excluded or p == archive:
+                      continue
+                  z.write(p, str(rel))
+                  names.append(str(rel))
+              z.writestr('SOURCE-EXPORT.json', json.dumps({
+                  'sourceRepository': 'kokoom94-ai/jeju-now-981',
+                  'sourceBranch': 'jeju-before-web',
+                  'sourceCommit': 'a0f7e23bf60bc5366131c9ddceda25c33ef55667',
+                  'targetRepository': 'kokoom94-ai/jeju-oldtown-3d',
+                  'targetRepositoryCreated': False,
+                  'oldMainModified': False,
+                  'files': names
+              }, ensure_ascii=False, indent=2))
+          print('Exported', len(names), 'files; no repository creation or deployment performed.')
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oldtown-source-a0f7e23
+          path: oldtown-source.zip
+          retention-days: 7
