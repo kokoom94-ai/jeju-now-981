@@ -1,0 +1,78 @@
+{
+  "version": "3.2.0-proxy-bootstrap",
+  "checkedAt": "2026-09-12T01:29:08.590Z",
+  "runId": "34664947786",
+  "sourceCommit": "35004a4a8a75921a1e95f4cc486defbc21b1bbf9",
+  "dedicatedUrl": "https://kokoom94-ai.github.io/jeju-now-981/",
+  "pagesEnabled": false,
+  "pagesSettingChanged": false,
+  "dedicatedSiteMatchesStaged": false,
+  "httpChecks": [
+    {
+      "file": "index.html",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "matchesStaged": false
+    },
+    {
+      "file": "app.mjs",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "matchesStaged": false
+    },
+    {
+      "file": "bridge.mjs",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "matchesStaged": false
+    },
+    {
+      "file": "session.mjs",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "matchesStaged": false
+    },
+    {
+      "file": "connection.mjs",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "matchesStaged": false
+    },
+    {
+      "file": "places.json",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "matchesStaged": false
+    },
+    {
+      "file": "site.json",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "matchesStaged": false
+    }
+  ],
+  "mainSha": "c5578da4d1ba24a8341de512552db69d56c14aba",
+  "mainUnchangedSinceAuditStart": true,
+  "protectedFiles": {
+    "index.html": {
+      "sha": "aa421d0027e8df0781284bd77e12208aa384bd0d",
+      "unchangedSinceAuditStart": true
+    },
+    "real.html": {
+      "sha": "960b23903202d64f30128d99ee415d5e8108e92c",
+      "unchangedSinceAuditStart": true
+    }
+  },
+  "userReportedKeyIssued": true,
+  "keyUsedByAudit": false,
+  "proxyDeploymentVerified": false,
+  "sdkLiveTested": false,
+  "jejuPrecisionModelsReceived": false,
+  "productionReady": false,
+  "blockers": [
+    "ENABLE_GITHUB_PAGES",
+    "VERIFY_DEDICATED_SITE_BYTES",
+    "CONFIGURE_USER_KEY_IN_BROWSER_OR_PROXY_ENV",
+    "VERIFY_REAL_VWORLD_SDK_AND_JEJU_GEOMETRY"
+  ]
+}

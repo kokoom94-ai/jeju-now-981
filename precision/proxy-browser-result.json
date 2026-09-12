@@ -1,0 +1,68 @@
+{
+  "checkedAt": "2026-09-12T01:29:42.210Z",
+  "runId": "34664947786",
+  "ok": true,
+  "passed": 13,
+  "checks": [
+    {
+      "name": "Local direct mode starts with no provider connection",
+      "passed": true
+    },
+    {
+      "name": "Proxy mode clears and disables browser key input",
+      "passed": true
+    },
+    {
+      "name": "Real unconfigured proxy reports missing environment key",
+      "passed": true
+    },
+    {
+      "name": "Preflight error leaves provider iframe absent",
+      "passed": true
+    },
+    {
+      "name": "Missing key does not contact provider",
+      "passed": true
+    },
+    {
+      "name": "Diagnostic records proxy and sanitized preflight failure",
+      "passed": true
+    },
+    {
+      "name": "Cancelled preflight cannot change disconnected state later",
+      "passed": true
+    },
+    {
+      "name": "Intentionally blocked SDK reports a network failure, not success",
+      "passed": true
+    },
+    {
+      "name": "Test credential cleared after failure",
+      "passed": true
+    },
+    {
+      "name": "No credential written to browser storage or diagnostic",
+      "passed": true
+    },
+    {
+      "name": "Proxy form has no mobile horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "All provider traffic blocked locally, no real SDK or geometry tested",
+      "passed": true
+    },
+    {
+      "name": "No unexpected browser JavaScript errors",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "failure": null,
+  "providerRequestsAllowed": 0,
+  "providerRequestsIntentionallyBlocked": 1,
+  "sdkLiveTested": false,
+  "jejuPrecisionModelsReceived": false,
+  "productionReady": false,
+  "scope": "Local HTTP proxy preflight and browser failure/cancellation checks. No successful SDK or model response is simulated."
+}
